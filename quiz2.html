@@ -196,6 +196,7 @@ document.getElementById('startBtn').onclick=async()=>{
   start.style.display='none';
   app.style.display='block';
   renderQuestion();
+  startTimer();
 };
 
 continueBtn.onclick=()=>{
@@ -235,17 +236,35 @@ document.getElementById("closeResultsTopBtn").onclick=()=>{
 let s=12*60+28;
 const time=document.getElementById('time');
 let paused=false;
+let timerStarted=false;
+let timerInterval=null;
+
+function updateTimer(){
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  time.textContent=[h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+}
+
+function startTimer(){
+  if(timerStarted) return;
+  timerStarted=true;
+  updateTimer();
+  timerInterval=setInterval(()=>{
+    if(!paused && s>0){
+      s--;
+      updateTimer();
+    }
+    if(s<=0 && timerInterval){
+      clearInterval(timerInterval);
+    }
+  },1000);
+}
+
 document.getElementById('pauseBtn').onclick=()=>{
   paused=!paused;
   document.getElementById('pauseBtn').textContent=paused?'RESUME':'PAUSE';
 };
-setInterval(()=>{
-  if(!paused && s>0){
-    s--;
-    const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
-    time.textContent=[h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
-  }
-},1000);
+
+updateTimer();
 </script>
 
 

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Custom: NUR 131 Quiz# 2 - 9/30/26</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; min-height: 100%; font-family: Arial, Helvetica, sans-serif; background: #f7f7f5; color: #2f2f2c; }
+  body { overflow-x: hidden; }
+  #app { min-height: 100vh; width: 100%; background: #fbfbfa; border-top: 6px solid #b2444f; display: flex; flex-direction: column; }
+  .topbar { display:flex; align-items:center; gap:18px; padding:24px 32px 18px; background:#f4f4f2; border-bottom:1px solid #d8d8d4; }
+  .brand { display:flex; align-items:center; gap:10px; min-width:110px; font-size:33px; color:#666; font-weight:300; letter-spacing:-2px; }
+  .brandMark { width:36px; height:36px; position:relative; display:inline-block; transform:rotate(-25deg); }
+  .brandMark:before,.brandMark:after { content:""; position:absolute; background:#b96871; border-radius:1px; }
+  .brandMark:before { width:35px; height:5px; left:0; top:15px; }
+  .brandMark:after { height:35px; width:5px; top:0; left:15px; }
+  .quizName { font-weight:600; font-size:18px; flex:1; }
+  .stripe { height:16px; background:repeating-linear-gradient(125deg,transparent 0 7px,#c6c6c1 7px 9px,transparent 9px 14px); opacity:.65; border-bottom:1px solid #ddd; }
+  .exam { flex:1; display:flex; flex-direction:column; min-height:calc(100vh - 110px); padding:28px 34px 20px; }
+  .status { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; border-bottom:1px solid #e4e4df; padding-bottom:20px; }
+  .qcount { font-size:29px; font-weight:600; color:#4d4d4a; }
+  .clockArea { display:flex; align-items:center; gap:14px; font-size:13px; text-align:right; color:#4e4e4a; }
+  .clockLines { line-height:1.65; }
+  button { font:inherit; }
+  .pauseBtn,.navBtn,.startBtn,.restartBtn { min-height:46px; padding:10px 18px; border:1px solid #b8b8b3; background:#e8e8e5; color:#444; font-weight:700; border-radius:2px; cursor:pointer; }
+  .questionArea { padding:72px 12px 30px; flex:1; }
+  .stem { font-size:19px; line-height:1.6; margin-bottom:34px; max-width:1250px; }
+  .options { display:grid; gap:16px; max-width:1250px; }
+  .option { display:flex; align-items:flex-start; gap:15px; padding:14px; border:1px solid transparent; border-radius:4px; cursor:pointer; min-height:54px; }
+  .option:hover { background:#f0f0ed; }
+  .option.selected { border-color:#9a6a70; background:#f6ecee; }
+  .option input { appearance:none; width:24px; height:24px; border:2px solid #777; border-radius:50%; margin:1px 0 0; flex:none; background:#fff; position:relative; }
+  .option input:checked { border-color:#964d57; }
+  .option input:checked:after { content:""; position:absolute; width:10px; height:10px; border-radius:50%; background:#964d57; top:5px; left:5px; }
+  .optionText { font-size:17px; line-height:1.5; }
+  .navrow { display:flex; justify-content:flex-end; gap:12px; padding:22px 0 16px; border-top:1px solid #e4e4df; }
+  .navBtn { padding:11px 30px; }
+  .navBtn:disabled { opacity:.42; cursor:not-allowed; }
+  .footerNote { display:flex; gap:10px; align-items:flex-start; border-top:1px solid #e3e3de; padding:14px 3px 4px; color:#696965; font-size:11px; line-height:1.45; }
+  .tinyMark { color:#b05b64; font-size:18px; font-weight:bold; }
+  .startOverlay { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px; background:#f7f7f5; }
+  .startCard { max-width:650px; width:100%; background:#fff; border:1px solid #d9d9d4; padding:34px; text-align:center; }
+  .startCard h1 { margin:0 0 12px; font-size:30px; }
+  .startCard p { color:#666; line-height:1.6; }
+  .startBtn { margin-top:14px; min-width:190px; }
+  .result { display:none; min-height:100vh; padding:90px 30px 40px; background:#fbfbfa; text-align:center; }
+  .result h2 { font-size:32px; margin:0 0 10px; }
+  .score { font-size:58px; font-weight:700; margin:14px 0; color:#5b4f51; }
+  .review { margin:34px auto 0; max-width:900px; text-align:left; display:grid; gap:12px; }
+  .reviewItem { padding:15px 16px; border:1px solid #ddd; background:#fff; font-size:14px; line-height:1.5; }
+  .fullscreenWarning { display:none; position:fixed; inset:0; z-index:9999; background:#fbfbfa; align-items:center; justify-content:center; text-align:center; padding:30px; }
+  .fullscreenWarning .box { max-width:600px; border:1px solid #ccc; background:#fff; padding:30px; }
+  .fullscreenWarning h2 { margin-top:0; }
+  @media(max-width:700px){
+    .topbar{padding:16px 14px;gap:10px;}
+    .brand{font-size:25px;min-width:76px;}
+    .quizName{font-size:14px;}
+    .exam{padding:18px 14px 14px;}
+    .status{gap:8px;}
+    .qcount{font-size:20px;}
+    .clockArea{font-size:11px;gap:7px;}
+    .questionArea{padding:42px 0 22px;}
+    .stem{font-size:16px;}
+    .optionText{font-size:15px;}
+    .navrow{justify-content:stretch;}
+    .navBtn{flex:1;padding:10px;}
+  }
+</style>
+</head>
+<body>
+<div id="startOverlay" class="startOverlay">
+  <div class="startCard">
+    <h1>NUR 131 Quiz #2</h1>
+    <p>This practice simulator can enter browser fullscreen so the ChatGPT sidebar and chat are not visible. Click <strong>Start Exam</strong>. If your browser asks, allow fullscreen.</p>
+    <button id="startBtn" class="startBtn">START EXAM</button>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="brand"><span class="brandMark" aria-hidden="true"></span><span>ati</span></div>
+    <div class="quizName">Custom: NUR 131 Quiz# 2 - 9/30/26</div>
+  </div>
+  <div class="stripe"></div>
+
+  <section class="exam" id="examView">
+    <div class="status">
+      <div class="qcount" id="qcount">Question: 1 of 10</div>
+      <div class="clockArea">
+        <div class="clockLines">
+          <div>Time Remaining: <strong id="timer">00:15:00</strong></div>
+          <div>Pause Remaining: <strong id="pauseRemaining">00:05:00</strong></div>
+        </div>
+        <button type="button" class="pauseBtn" id="pauseBtn">PAUSE</button>
+      </div>
+    </div>
+
+    <div class="questionArea" id="questionArea">
+      <div class="stem" id="stem"></div>
+      <div class="options" id="options" role="radiogroup" aria-label="Answer choices"></div>
+    </div>
+
+    <div class="navrow">
+      <button type="button" class="navBtn" id="backBtn">BACK</button>
+      <button type="button" class="navBtn" id="continueBtn">CONTINUE</button>
+    </div>
+
+    <div class="footerNote">
+      <span class="tinyMark">✣</span>
+      <span>Full screen mode is in effect during your practice testing.</span>
+    </div>
+  </section>
+</div>
+
+<section class="result" id="resultView" aria-live="polite">
+  <h2>Quiz Complete</h2>
+  <div class="score" id="scoreText">0/10</div>
+  <p id="scoreMessage"></p>
+  <div class="review" id="review"></div>
+  <button type="button" class="restartBtn" id="restartBtn">RETAKE QUIZ</button>
+</section>
+
+<div id="fullscreenWarning" class="fullscreenWarning">
+  <div class="box">
+    <h2>Fullscreen exited</h2>
+    <p>For the full exam-style practice view, return to fullscreen.</p>
+    <button id="returnFullscreen" class="startBtn">RETURN TO FULLSCREEN</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const questions = [
+    {
+      q:'A nurse is preparing to obtain an electronic blood pressure measurement on a client. Which of the following actions should the nurse plan to take?',
+      a:["Align the artery indicator on the blood pressure cuff with the client's brachial artery.","Place the blood pressure cuff 5 cm (2 in) above the client's antecubital space.","Select a cuff that covers 50% of the client's upper arm.","Elevate the client's arm above the level of the heart."],
+      correct:0,
+      rationale:'The artery marker should be aligned over the brachial artery, and the arm should be supported at heart level.'
+    },
+    {
+      q:'A nurse is assessing a client for orthostatic hypotension. Which finding meets the usual criterion for orthostatic hypotension?',
+      a:['A systolic pressure decrease of 20 mm Hg after standing','A systolic pressure increase of 10 mm Hg after standing','A diastolic pressure decrease of 5 mm Hg after standing','A pulse decrease of 4/min after standing'],
+      correct:0,
+      rationale:'Orthostatic hypotension is commonly identified by a systolic decrease of at least 20 mm Hg or a diastolic decrease of at least 10 mm Hg within 3 minutes of standing.'
+    },
+    {
+      q:'A nurse is obtaining an oral temperature. Which client should the nurse avoid using the oral route for?',
+      a:['A client who drank cool water 35 minutes ago','A client who is breathing through the mouth due to nasal congestion','A client who is resting in bed','A client whose pulse is 88/min'],
+      correct:1,
+      rationale:'Mouth breathing can interfere with an accurate oral temperature measurement.'
+    },
+    {
+      q:"A nurse is measuring a client's radial pulse. Which action should the nurse take?",
+      a:['Use the thumb to palpate the artery','Apply firm pressure until the pulse disappears','Use the pads of two or three fingers to palpate the pulse','Count for 10 seconds and multiply by 6 for every client'],
+      correct:2,
+      rationale:'The pads of two or three fingers are used because the thumb has its own pulse and can interfere with assessment.'
+    },
+    {
+      q:'A nurse obtains a respiratory rate of 8/min in an adult client. Which action should the nurse take first?',
+      a:["Document the finding as expected","Assess the client's respiratory depth, effort, and oxygenation","Ask the client to walk in the hallway","Recheck the respiratory rate at the next routine vital-sign assessment"],
+      correct:1,
+      rationale:'A respiratory rate of 8/min is below the expected adult range, so further respiratory assessment is the priority.'
+    },
+    {
+      q:'A nurse is assessing oxygen saturation using pulse oximetry. Which factor can interfere with an accurate reading?',
+      a:['Warm fingers','Dark nail polish','Sitting upright','A respiratory rate of 16/min'],
+      correct:1,
+      rationale:'Nail polish, especially darker colors, can interfere with transmission of light through the probe site.'
+    },
+    {
+      q:'A nurse is teaching a newly licensed nurse about loss of body heat. Heat loss that occurs when sweat changes from liquid to vapor is caused by which mechanism?',
+      a:['Conduction','Convection','Radiation','Evaporation'],
+      correct:3,
+      rationale:'Evaporation is heat loss that occurs when liquid on the body surface changes into vapor.'
+    },
+    {
+      q:'A nurse is assessing a client who has arteriosclerosis and increased peripheral vascular resistance. Which blood pressure finding should the nurse expect?',
+      a:['82/46 mm Hg','96/58 mm Hg','118/72 mm Hg','160/88 mm Hg'],
+      correct:3,
+      rationale:'Increased peripheral vascular resistance contributes to increased arterial blood pressure.'
+    },
+    {
+      q:"A nurse is preparing to measure an adult client's apical pulse. Where should the nurse place the stethoscope?",
+      a:['Second intercostal space at the right sternal border','Fifth intercostal space at the left midclavicular line','Fourth intercostal space at the right midaxillary line','Second intercostal space at the left midclavicular line'],
+      correct:1,
+      rationale:'The adult apical pulse is auscultated at the point of maximal impulse, typically the fifth intercostal space at the left midclavicular line.'
+    },
+    {
+      q:'A nurse obtains a blood pressure reading that is unexpectedly high. Which action should the nurse take before reporting the finding?',
+      a:['Immediately administer an antihypertensive medication','Recheck the blood pressure using proper technique after allowing the client to rest','Place the client flat with both legs elevated',"Use a cuff that is smaller than the client's arm circumference"],
+      correct:1,
+      rationale:'An unexpected reading should be verified with correct technique and appropriate rest before escalation, unless urgent symptoms are present.'
+    }
+  ];
+
+  let index = 0;
+  let answers = Array(questions.length).fill(null);
+  let seconds = 15 * 60;
+  let pauseSeconds = 5 * 60;
+  let paused = false;
+  let done = false;
+  let started = false;
+
+  const startOverlay = document.getElementById('startOverlay');
+  const app = document.getElementById('app');
+  const resultView = document.getElementById('resultView');
+  const qcount = document.getElementById('qcount');
+  const timer = document.getElementById('timer');
+  const pauseRemaining = document.getElementById('pauseRemaining');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const continueBtn = document.getElementById('continueBtn');
+  const backBtn = document.getElementById('backBtn');
+  const questionArea = document.getElementById('questionArea');
+  const stem = document.getElementById('stem');
+  const options = document.getElementById('options');
+  const scoreText = document.getElementById('scoreText');
+  const scoreMessage = document.getElementById('scoreMessage');
+  const review = document.getElementById('review');
+  const restartBtn = document.getElementById('restartBtn');
+  const fullscreenWarning = document.getElementById('fullscreenWarning');
+
+  function format(s){
+    s=Math.max(0,s);
+    const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60;
+    return [h,m,sec].map(n=>String(n).padStart(2,'0')).join(':');
+  }
+
+  function updateClock(){
+    timer.textContent = format(seconds);
+    pauseRemaining.textContent = format(pauseSeconds);
+  }
+
+  function render(){
+    const item = questions[index];
+    qcount.textContent = `Question: ${index+1} of ${questions.length}`;
+    stem.textContent = item.q;
+    options.innerHTML = '';
+    item.a.forEach((label,i)=>{
+      const wrap = document.createElement('label');
+      wrap.className = 'option' + (answers[index]===i ? ' selected' : '');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'ati-answer';
+      input.checked = answers[index] === i;
+      const text = document.createElement('span');
+      text.className='optionText';
+      text.textContent=label;
+      input.addEventListener('change',()=>{ answers[index]=i; render(); });
+      wrap.append(input,text);
+      options.appendChild(wrap);
+    });
+    backBtn.disabled = index===0;
+    continueBtn.textContent = index===questions.length-1 ? 'SUBMIT' : 'CONTINUE';
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  function finish(){
+    if(done) return;
+    done = true;
+    app.style.display = 'none';
+    resultView.style.display = 'block';
+    const score = answers.reduce((n,a,i)=>n+(a===questions[i].correct?1:0),0);
+    scoreText.textContent = `${score}/${questions.length}`;
+    scoreMessage.textContent = score>=8 ? 'Strong practice run. Review what you missed, then retake it once without looking at the rationales.' : 'Review the missed concepts below, then retake the quiz.';
+    review.innerHTML = '';
+    questions.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='reviewItem';
+      const user = answers[i]===null ? 'No answer' : item.a[answers[i]];
+      div.innerHTML = `<strong>Question ${i+1}:</strong> ${answers[i]===item.correct?'✓ Correct':'✗ Review'}<br><strong>Your answer:</strong> ${escapeHtml(user)}<br><strong>Correct answer:</strong> ${escapeHtml(item.a[item.correct])}<br>${escapeHtml(item.rationale)}`;
+      review.appendChild(div);
+    });
+  }
+
+  async function enterFullscreen(){
+    const el = document.documentElement;
+    if (!document.fullscreenElement && el.requestFullscreen) {
+      try { await el.requestFullscreen(); } catch(e) {}
+    }
+  }
+
+  document.getElementById('startBtn').addEventListener('click', async ()=>{
+    await enterFullscreen();
+    started = true;
+    startOverlay.style.display='none';
+    app.style.display='flex';
+    render();
+    updateClock();
+  });
+
+  document.getElementById('returnFullscreen').addEventListener('click', async ()=>{
+    await enterFullscreen();
+    fullscreenWarning.style.display='none';
+  });
+
+  document.addEventListener('fullscreenchange', ()=>{
+    if(started && !done && !document.fullscreenElement){
+      fullscreenWarning.style.display='flex';
+    } else {
+      fullscreenWarning.style.display='none';
+    }
+  });
+
+  pauseBtn.addEventListener('click',()=>{
+    if(done) return;
+    if(paused){
+      paused=false;
+      pauseBtn.textContent='PAUSE';
+      questionArea.style.visibility='visible';
+      continueBtn.disabled=false;
+      backBtn.disabled=index===0;
+    } else if(pauseSeconds>0){
+      paused=true;
+      pauseBtn.textContent='RESUME';
+      questionArea.style.visibility='hidden';
+      continueBtn.disabled=true;
+      backBtn.disabled=true;
+    }
+  });
+
+  continueBtn.addEventListener('click',()=>{
+    if(index<questions.length-1){
+      index++;
+      render();
+    } else {
+      finish();
+    }
+  });
+
+  backBtn.addEventListener('click',()=>{
+    if(index>0){
+      index--;
+      render();
+    }
+  });
+
+  restartBtn.addEventListener('click', async ()=>{
+    index=0;
+    answers=Array(questions.length).fill(null);
+    seconds=900;
+    pauseSeconds=300;
+    paused=false;
+    done=false;
+    resultView.style.display='none';
+    app.style.display='flex';
+    pauseBtn.textContent='PAUSE';
+    questionArea.style.visibility='visible';
+    await enterFullscreen();
+    updateClock();
+    render();
+  });
+
+  setInterval(()=>{
+    if(!started || done) return;
+    if(paused){
+      if(pauseSeconds>0) pauseSeconds--;
+      if(pauseSeconds<=0){
+        paused=false;
+        pauseBtn.textContent='PAUSE';
+        questionArea.style.visibility='visible';
+        continueBtn.disabled=false;
+        render();
+      }
+    } else {
+      if(seconds>0) seconds--;
+      if(seconds<=0) finish();
+    }
+    updateClock();
+  },1000);
+})();
+</script>
+</body>
+</html>

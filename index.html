@@ -198,13 +198,6 @@ document.getElementById('startBtn').onclick=async()=>{
   renderQuestion();
 };
 
-backBtn.onclick=()=>{
-  if(current>0){
-    current--;
-    renderQuestion();
-  }
-};
-
 continueBtn.onclick=()=>{
   if(current<questions.length-1){
     current++;

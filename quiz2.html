@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NUR 131 QUIZ 2 Preview</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#fafaf8;color:#3d3d3a}
+  body{overflow:hidden}
+  .start{position:fixed;inset:0;background:#f7f7f5;display:flex;align-items:center;justify-content:center;z-index:50}
+  .start-card{width:min(620px,90vw);background:white;border:1px solid #d8d8d3;padding:34px;text-align:center}
+  .start-card h1{margin:0 0 10px;font-size:28px}
+  .start-card p{line-height:1.5;color:#666}
+  .btn{border:1px solid #b7b7b2;background:#e9e9e6;color:#444;padding:11px 22px;font-weight:700;cursor:pointer}
+  #app{display:none;height:100vh;border-top:7px solid #b94853;background:#fbfbfa}
+  .topbar{height:103px;display:flex;align-items:center;padding:18px 30px;background:#f5f5f3;border-bottom:1px solid #deded9}
+  .brand{display:flex;align-items:center;gap:10px;margin-right:28px;color:#666;font-size:39px;font-weight:300;letter-spacing:-2px}
+  .mark{width:40px;height:40px;position:relative;transform:rotate(-25deg)}
+  .mark:before,.mark:after{content:"";position:absolute;background:#b96b73}
+  .mark:before{width:40px;height:5px;left:0;top:17px}
+  .mark:after{width:5px;height:40px;left:17px;top:0}
+  .title{font-size:20px;font-weight:600}
+  .hashline{height:20px;border-bottom:1px solid #d5d5d0;background:repeating-linear-gradient(125deg,transparent 0 8px,#c6c6c0 8px 10px,transparent 10px 16px)}
+  .main{height:calc(100vh - 130px);padding:27px 34px 24px;display:flex;flex-direction:column}
+  .status{display:flex;justify-content:space-between;align-items:flex-start}
+  .question-label{font-size:31px;font-weight:600}
+  .clock-wrap{display:flex;align-items:center;gap:14px;font-size:14px}
+  .clock{text-align:right;line-height:1.55}
+  .pause{min-width:85px}
+  .question-box{margin-top:60px;flex:1}
+  .stem{font-size:18px;line-height:1.55;margin-bottom:16px;max-width:1220px}
+  .blue-dots{height:10px;width:100%;margin:8px 0 28px;
+    background-image:radial-gradient(circle,#80a9bc 2px,transparent 2.4px);
+    background-size:22px 10px;background-position:left center;background-repeat:repeat-x}
+  .choices{display:grid;gap:18px;max-width:1100px}
+  .choice{display:flex;gap:13px;align-items:flex-start;font-size:17px;line-height:1.45;cursor:pointer}
+  .choice input{appearance:none;width:23px;height:23px;border:2px solid #787875;border-radius:50%;margin:0;flex:none;background:white;position:relative}
+  .choice input:checked{border-color:#787875}
+  .choice input:checked:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:#555;top:5px;left:5px}
+  .bottom{display:flex;justify-content:flex-end;padding:10px 0 6px}
+  .continue{min-width:118px}
+  .foot{border-top:1px solid #e0e0dc;padding:13px 75px 0;text-align:center;font-size:11px;color:#64645f;line-height:1.45}
+  .foot strong{font-weight:700}
+  .practice-note{font-size:10px;color:#888;margin-top:3px}
+  @media(max-width:720px){
+    .topbar{padding:14px;height:84px}
+    .brand{font-size:30px}
+    .title{font-size:15px}
+    .main{height:calc(100vh - 111px);padding:20px 16px}
+    .question-label{font-size:24px}
+    .question-box{margin-top:38px}
+    .stem,.choice{font-size:15px}
+    .foot{padding-left:10px;padding-right:10px}
+  }
+
+  
+  .resultOverlay{display:none;position:fixed;inset:0;background:rgba(90,90,90,.48);z-index:100;align-items:center;justify-content:center}
+  .resultShell{position:relative;width:100%;height:100%}
+  .closeX{position:absolute;top:34px;right:42px;background:none;border:none;color:#4d4d4d;font-weight:700;font-size:18px;letter-spacing:.02em;cursor:pointer}
+  .resultBox{position:absolute;top:auto;left:auto;width:490px;background:#fff;border:1px solid #d5d5cf;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:22px 28px 22px}
+  .resultBox h3{margin:0 0 12px;font-size:26px;line-height:1.1;color:#d36f73;font-weight:700}
+  .resultBox p{margin:0 0 16px;color:#4f4f4b;font-size:15px;font-weight:600}
+  .resultBtns{display:grid;gap:12px}
+  .resultBtnPlain{min-height:56px;border:2px solid #c8dde8;background:#fff;color:#5b5b57;font-size:15px;font-weight:600;cursor:pointer}
+  .resultBtnFinal{min-height:56px;border:1px solid #d5d15a;background:#dde55c;color:#525200;font-size:15px;font-weight:700;cursor:pointer}
+    
+
+
+  /* Completion-state presentation */
+  #resultOverlay{
+    top:127px;
+    height:calc(100vh - 127px);
+    background:rgba(218,220,220,.88);
+    align-items:flex-start;
+    justify-content:center;
+    padding-top:72px;
+  }
+  #resultOverlay .resultShell{
+    width:100%;
+    height:100%;
+    position:relative;
+  }
+  #resultOverlay .resultBox{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:490px;
+  }
+  #resultOverlay .closeX{
+    position:fixed;
+    top:92px;
+    right:34px;
+    z-index:102;
+  }
+
+</style>
+</head>
+<body>
+<div id="start" class="start">
+  <div class="start-card">
+    <h1>NUR 131 QUIZ 2</h1>
+    <p>Fullscreen quiz preview.</p>
+    <button id="startBtn" class="btn">START</button>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><span>ati</span></div>
+    <div class="title">Custom: NUR 131 Quiz# 2 - 9/30/26</div>
+  </div>
+  <div class="hashline"></div>
+
+  <main class="main">
+    <div class="status">
+      <div class="question-label">&nbsp;</div>
+      <div class="clock-wrap">
+        <div class="clock">
+          <div>Time Remaining: <strong id="time">00:12:28</strong></div>
+          <div>Pause Remaining: <strong>00:05:00</strong></div>
+        </div>
+        <button class="btn pause" id="pauseBtn">PAUSE</button>
+      </div>
+    </div>
+
+    <section class="question-box">
+      <div class="stem" id="stem"></div>
+      <div class="blue-dots"></div>
+      <div class="choices" id="choices"></div>
+    </section>
+
+    <div class="bottom"><button class="btn continue" id="continueBtn">CONTINUE</button></div>
+
+    <div class="foot">
+      <strong>Full screen mode is in effect.</strong>
+    </div>
+  </main>
+</div>
+
+<script>
+const start=document.getElementById('start');
+const app=document.getElementById('app');
+const stem=document.getElementById('stem');
+const choices=document.getElementById('choices');
+const continueBtn=document.getElementById('continueBtn');
+
+const questions = [
+  {q:`A nurse is caring for a client who states, "I fail at everything I try." Which therapy would help the client identify and change this distorted thought pattern?`,a:[`Psychoanalysis`,`Cognitive behavioral therapy`,`Milieu therapy`,`Family therapy`],correct:1},
+  {q:`A nurse is reviewing treatment options for a client who has a specific phobia. Which therapy involves gradual exposure to the feared object while using relaxation techniques?`,a:[`Aversion therapy`,`Systematic desensitization`,`Psychoanalysis`,`Milieu therapy`],correct:1},
+  {q:`A nurse is caring for a client participating in dialectical behavior therapy (DBT). Which skill should the nurse expect the client to learn?`,a:[`Free association`,`Dream interpretation`,`Distress tolerance`,`Hypnosis`],correct:2},
+  {q:`A client participates in therapy that focuses on unconscious conflicts and early childhood experiences. Which type of therapy is the client receiving?`,a:[`Cognitive behavioral therapy`,`Psychoanalytic therapy`,`Behavioral therapy`,`Milieu therapy`],correct:1},
+  {q:`A nurse is caring for clients on an inpatient psychiatric unit. Which intervention is an example of milieu therapy?`,a:[`Providing a structured and safe therapeutic environment`,`Asking a client to describe childhood dreams`,`Teaching a client to challenge automatic negative thoughts`,`Exposing a client repeatedly to an anxiety-producing stimulus`],correct:0},
+  {q:`A nurse is teaching a client about behavioral therapy. Which statement by the client indicates understanding?`,a:[`"This therapy will help me explore unconscious conflicts."`,`"This therapy focuses on changing learned behaviors."`,`"This therapy focuses primarily on my childhood development."`,`"This therapy will analyze the meaning of my dreams."`],correct:1},
+  {q:`A client who has obsessive-compulsive disorder is prescribed exposure and response prevention therapy. Which action should the nurse expect?`,a:[`The client discusses unresolved childhood conflicts.`,`The client is exposed to an anxiety trigger and avoids performing the compulsion.`,`The client receives rewards for discussing emotions.`,`The client practices free association during sessions.`],correct:1},
+  {q:`A nurse is caring for a client receiving group therapy. Which is a therapeutic benefit of group therapy?`,a:[`It prevents clients from receiving feedback from others.`,`It allows clients to recognize that others have similar experiences.`,`It replaces the need for all individual treatment.`,`It focuses only on unconscious conflicts.`],correct:1},
+  {q:`A nurse is teaching a client about electroconvulsive therapy (ECT). Which disorder is ECT commonly used to treat when symptoms are severe or other treatments have not been effective?`,a:[`Severe major depressive disorder`,`Specific phobia`,`Mild adjustment disorder`,`Insomnia without another psychiatric disorder`],correct:0},
+  {q:`A nurse is caring for a client participating in cognitive behavioral therapy. Which client statement demonstrates the goal of this therapy?`,a:[`"I am learning how my thoughts affect my feelings and behaviors."`,`"I am learning to interpret all of my dreams."`,`"I am focusing only on events from early childhood."`,`"I am avoiding discussing my current thought patterns."`],correct:0},
+  {q:`A nurse is caring for a client who is receiving aversion therapy. Which intervention should the nurse expect?`,a:[`Pairing an unwanted behavior with an unpleasant stimulus`,`Encouraging the client to discuss dreams`,`Teaching the client to identify cognitive distortions`,`Providing a structured therapeutic environment`],correct:0},
+  {q:`A nurse is teaching a client about motivational interviewing. Which nursing response best reflects this approach?`,a:[`"You need to stop this behavior immediately."`,`"What changes do you think would be most realistic for you right now?"`,`"Tell me about your earliest childhood memory."`,`"I will decide which goal you should work on first."`],correct:1},
+  {q:`A nurse is caring for a client receiving family therapy. Which outcome should the nurse expect?`,a:[`Improved communication and problem-solving among family members`,`Elimination of all individual therapy needs`,`Exclusive focus on unconscious childhood conflicts`,`Use of aversive stimuli to change behavior`],correct:0},
+  {q:`A client is participating in reality therapy. Which focus should the nurse expect?`,a:[`Examining current choices and behaviors`,`Interpreting dreams and unconscious wishes`,`Reconstructing early childhood memories`,`Using medication as the primary intervention`],correct:0},
+  {q:`A nurse is caring for a client who is learning mindfulness as part of therapy. Which statement by the client indicates understanding?`,a:[`"I will focus on the present moment without judging my thoughts."`,`"I will avoid all uncomfortable feelings."`,`"I will analyze every dream for hidden meaning."`,`"I will replace all therapy sessions with meditation."`],correct:0},
+  {q:`A nurse is discussing interpersonal therapy with a client who has depression. Which area does this therapy commonly address?`,a:[`Current relationship difficulties and role transitions`,`Only unconscious childhood conflicts`,`Conditioning through unpleasant stimuli`,`Environmental structure on an inpatient unit`],correct:0},
+  {q:`A nurse is caring for a client participating in assertiveness training. Which behavior demonstrates progress?`,a:[`Expressing needs clearly while respecting others`,`Avoiding all disagreement with others`,`Using aggressive language to gain control`,`Remaining silent when feeling mistreated`],correct:0},
+  {q:`A nurse is teaching a client about biofeedback. Which statement by the client indicates understanding?`,a:[`"I will learn to control certain physiologic responses using feedback from monitoring equipment."`,`"I will explore unconscious conflicts through free association."`,`"I will be exposed to a feared object while prevented from performing rituals."`,`"I will receive a mild unpleasant stimulus whenever I feel anxious."`],correct:0},
+  {q:`A client is participating in token economy therapy on an inpatient unit. Which action should the nurse expect?`,a:[`The client earns tokens for desired behaviors that can be exchanged for rewards.`,`The client is asked to interpret recurring dreams.`,`The client is encouraged to avoid all social interaction.`,`The client is repeatedly exposed to a feared stimulus without support.`],correct:0},
+  {q:`A nurse is caring for a client receiving supportive psychotherapy. Which nursing action is most consistent with this approach?`,a:[`Reinforcing coping skills and providing encouragement`,`Focusing only on unconscious childhood conflicts`,`Pairing unwanted behavior with an unpleasant stimulus`,`Using hypnosis as the primary treatment`],correct:0}
+];
+
+let current=0;
+const answers = Array(questions.length).fill(null);
+
+function renderQuestion(){
+  stem.textContent = questions[current].q;
+  choices.innerHTML = "";
+  questions[current].a.forEach((text,i)=>{
+    const label=document.createElement("label");
+    label.className="choice";
+    const input=document.createElement("input");
+    input.type="radio";
+    input.name="q";
+    input.checked=answers[current]===i;
+    input.addEventListener("change",()=>{answers[current]=i;});
+    const span=document.createElement("span");
+    span.textContent=text;
+    label.append(input,span);
+    choices.appendChild(label);
+  });
+  continueBtn.textContent = current===questions.length-1 ? "SUBMIT" : "CONTINUE";
+}
+
+document.getElementById('startBtn').onclick=async()=>{
+  try{await document.documentElement.requestFullscreen()}catch(e){}
+  start.style.display='none';
+  app.style.display='block';
+  renderQuestion();
+};
+
+backBtn.onclick=()=>{
+  if(current>0){
+    current--;
+    renderQuestion();
+  }
+};
+
+continueBtn.onclick=()=>{
+  if(current<questions.length-1){
+    current++;
+    renderQuestion();
+  }else{
+    questionArea = document.querySelector(".question-box");
+    if(questionArea) questionArea.style.visibility = "hidden";
+    document.querySelector(".bottom").style.visibility = "hidden";
+    document.getElementById("resultOverlay").style.display="flex";
+  }
+};
+
+
+document.getElementById("closeCompleteBtn").onclick=()=>{
+  document.getElementById("resultOverlay").style.display="none";
+  const qa=document.querySelector(".question-box"); if(qa) qa.style.visibility="visible";
+  document.querySelector(".bottom").style.visibility="visible";
+};
+
+document.getElementById("finalizeResultsBtn").onclick=()=>{
+  const score = answers.reduce((sum,ans,i)=>sum + (ans===questions[i].correct ? 1 : 0),0);
+  document.getElementById("resultOverlay").style.display="none";
+  document.getElementById("scoreText").textContent = `${score} out of ${questions.length}`;
+  document.getElementById("scoreOverlay").style.display="flex";
+};
+
+document.getElementById("closeResultsBtn").onclick=()=>{
+  document.getElementById("scoreOverlay").style.display="none";
+};
+
+document.getElementById("closeResultsTopBtn").onclick=()=>{
+  document.getElementById("scoreOverlay").style.display="none";
+};
+
+let s=12*60+28;
+const time=document.getElementById('time');
+let paused=false;
+document.getElementById('pauseBtn').onclick=()=>{
+  paused=!paused;
+  document.getElementById('pauseBtn').textContent=paused?'RESUME':'PAUSE';
+};
+setInterval(()=>{
+  if(!paused && s>0){
+    s--;
+    const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+    time.textContent=[h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+  }
+},1000);
+</script>
+
+
+<div id="resultOverlay" class="resultOverlay">
+  <div class="resultShell">
+    <button id="closeCompleteBtn" class="closeX">&#8855; CLOSE</button>
+    <div class="resultBox">
+      <h3>Assessment Completed!</h3>
+      <p>How would you like to proceed?</p>
+      <div class="resultBtns">
+        <button class="resultBtnFinal" id="finalizeResultsBtn">Finalize and View Results</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="scoreOverlay" class="resultOverlay">
+  <div class="resultShell">
+    <button id="closeResultsTopBtn" class="closeX">&#8855; CLOSE</button>
+    <div class="resultBox" style="width:360px;">
+      <h3>Results</h3>
+      <p id="scoreText"></p>
+      <div class="resultBtns">
+        <button class="resultBtnPlain" id="closeResultsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -102,7 +102,7 @@
   <div class="start-card">
     <h1>NUR 131 QUIZ 2</h1>
     <p>Fullscreen quiz preview.</p>
-    <button id="startBtn" class="btn">START</button>
+    <button type="button" id="startBtn" class="btn">START</button>
   </div>
 </div>
 
@@ -121,7 +121,7 @@
           <div>Time Remaining: <strong id="time">00:12:28</strong></div>
           <div>Pause Remaining: <strong>00:05:00</strong></div>
         </div>
-        <button class="btn pause" id="pauseBtn">PAUSE</button>
+        <button type="button" class="btn pause" id="pauseBtn">PAUSE</button>
       </div>
     </div>
 
@@ -131,7 +131,7 @@
       <div class="choices" id="choices"></div>
     </section>
 
-    <div class="bottom"><button class="btn continue" id="continueBtn">CONTINUE</button></div>
+    <div class="bottom"><button type="button" class="btn continue" id="continueBtn">CONTINUE</button></div>
 
     <div class="foot">
       <strong>Full screen mode is in effect.</strong>
@@ -144,7 +144,11 @@ const start=document.getElementById('start');
 const app=document.getElementById('app');
 const stem=document.getElementById('stem');
 const choices=document.getElementById('choices');
+const startBtn=document.getElementById('startBtn');
 const continueBtn=document.getElementById('continueBtn');
+const pauseBtn=document.getElementById('pauseBtn');
+const time=document.getElementById('time');
+const pauseDisplay=document.querySelector('.clock div:nth-child(2) strong');
 
 const questions = [
   {q:`A nurse is caring for a client who states, "I fail at everything I try." Which therapy would help the client identify and change this distorted thought pattern?`,a:[`Psychoanalysis`,`Cognitive behavioral therapy`,`Milieu therapy`,`Family therapy`],correct:1},
@@ -170,121 +174,125 @@ const questions = [
 ];
 
 let current=0;
-const answers = Array(questions.length).fill(null);
-
-function renderQuestion(){
-  stem.textContent = questions[current].q;
-  choices.innerHTML = "";
-  questions[current].a.forEach((text,i)=>{
-    const label=document.createElement("label");
-    label.className="choice";
-    const input=document.createElement("input");
-    input.type="radio";
-    input.name="q";
-    input.checked=answers[current]===i;
-    input.addEventListener("change",()=>{answers[current]=i;});
-    const span=document.createElement("span");
-    span.textContent=text;
-    label.append(input,span);
-    choices.appendChild(label);
-  });
-  continueBtn.textContent = current===questions.length-1 ? "SUBMIT" : "CONTINUE";
-}
-
-document.getElementById('startBtn').onclick=async()=>{
-  startTimer();
-  start.style.display='none';
-  app.style.display='block';
-  renderQuestion();
-  try{await document.documentElement.requestFullscreen()}catch(e){}
-};
-
-continueBtn.onclick=()=>{
-  if(current<questions.length-1){
-    current++;
-    renderQuestion();
-  }else{
-    questionArea = document.querySelector(".question-box");
-    if(questionArea) questionArea.style.visibility = "hidden";
-    document.querySelector(".bottom").style.visibility = "hidden";
-    document.getElementById("resultOverlay").style.display="flex";
-  }
-};
-
-
-document.getElementById("closeCompleteBtn").onclick=()=>{
-  document.getElementById("resultOverlay").style.display="none";
-  const qa=document.querySelector(".question-box"); if(qa) qa.style.visibility="visible";
-  document.querySelector(".bottom").style.visibility="visible";
-};
-
-document.getElementById("finalizeResultsBtn").onclick=()=>{
-  const score = answers.reduce((sum,ans,i)=>sum + (ans===questions[i].correct ? 1 : 0),0);
-  document.getElementById("resultOverlay").style.display="none";
-  document.getElementById("scoreText").textContent = `${score} out of ${questions.length}`;
-  document.getElementById("scoreOverlay").style.display="flex";
-};
-
-document.getElementById("closeResultsBtn").onclick=()=>{
-  document.getElementById("scoreOverlay").style.display="none";
-};
-
-document.getElementById("closeResultsTopBtn").onclick=()=>{
-  document.getElementById("scoreOverlay").style.display="none";
-};
-
-let s=12*60+28;
-let pauseRemaining=5*60;
-const time=document.getElementById('time');
-const pauseDisplay=document.querySelector('.clock div:nth-child(2) strong');
+const answers=Array(questions.length).fill(null);
+let examStarted=false;
 let paused=false;
-let timerStarted=false;
-let lastTick=Date.now();
+let remaining=12*60+28;
+let pauseRemaining=5*60;
+let lastSecond=Date.now();
+let timerId=null;
 
 function formatTime(total){
   total=Math.max(0,Math.floor(total));
   const h=Math.floor(total/3600);
   const m=Math.floor((total%3600)/60);
-  const sec=total%60;
-  return [h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+  const s=total%60;
+  return [h,m,s].map(v=>String(v).padStart(2,'0')).join(':');
 }
 
-function paintTimers(){
-  time.textContent=formatTime(s);
+function updateClock(){
+  time.textContent=formatTime(remaining);
   if(pauseDisplay) pauseDisplay.textContent=formatTime(pauseRemaining);
 }
 
-function startTimer(){
-  if(timerStarted) return;
-  timerStarted=true;
-  lastTick=Date.now();
-  paintTimers();
-  setInterval(()=>{
-    const now=Date.now();
-    const elapsed=Math.floor((now-lastTick)/1000);
-    if(elapsed>0){
-      lastTick += elapsed*1000;
-      if(paused){
-        pauseRemaining=Math.max(0,pauseRemaining-elapsed);
-        if(pauseRemaining===0){
-          paused=false;
-          document.getElementById('pauseBtn').textContent='PAUSE';
-        }
-      }else{
-        s=Math.max(0,s-elapsed);
-      }
-      paintTimers();
-    }
-  },250);
+function renderQuestion(){
+  const item=questions[current];
+  stem.textContent=item.q;
+  choices.innerHTML='';
+  item.a.forEach((answer,i)=>{
+    const label=document.createElement('label');
+    label.className='choice';
+    const input=document.createElement('input');
+    input.type='radio';
+    input.name='q';
+    input.value=String(i);
+    input.checked=answers[current]===i;
+    input.addEventListener('change',function(){ answers[current]=i; });
+    const span=document.createElement('span');
+    span.textContent=answer;
+    label.appendChild(input);
+    label.appendChild(span);
+    choices.appendChild(label);
+  });
+  continueBtn.textContent=(current===questions.length-1)?'SUBMIT':'CONTINUE';
 }
 
-document.getElementById('pauseBtn').onclick=()=>{
-  paused=!paused;
-  lastTick=Date.now();
-  document.getElementById('pauseBtn').textContent=paused?'RESUME':'PAUSE';
-};
+function startTimer(){
+  if(timerId!==null) return;
+  lastSecond=Date.now();
+  timerId=setInterval(function(){
+    const now=Date.now();
+    if(now-lastSecond>=1000){
+      const secondsPassed=Math.floor((now-lastSecond)/1000);
+      lastSecond += secondsPassed*1000;
+      if(!paused){
+        remaining=Math.max(0,remaining-secondsPassed);
+      }
+      updateClock();
+      if(remaining===0){
+        clearInterval(timerId);
+        timerId=null;
+      }
+    }
+  },100);
+}
 
-paintTimers();
+startBtn.addEventListener('click',function(){
+  if(examStarted) return;
+  examStarted=true;
+  current=0;
+  start.style.display='none';
+  app.style.display='block';
+  renderQuestion();
+  updateClock();
+  startTimer();
+  if(document.documentElement.requestFullscreen){
+    document.documentElement.requestFullscreen().catch(function(){});
+  }
+});
+
+continueBtn.addEventListener('click',function(){
+  if(!examStarted) return;
+  if(current < questions.length-1){
+    current += 1;
+    renderQuestion();
+    window.scrollTo(0,0);
+  }else{
+    const questionArea=document.querySelector('.question-box');
+    if(questionArea) questionArea.style.visibility='hidden';
+    const bottom=document.querySelector('.bottom');
+    if(bottom) bottom.style.visibility='hidden';
+    document.getElementById('resultOverlay').style.display='flex';
+  }
+});
+
+pauseBtn.addEventListener('click',function(){
+  paused=!paused;
+  lastSecond=Date.now();
+  pauseBtn.textContent=paused?'RESUME':'PAUSE';
+});
+
+document.getElementById('closeCompleteBtn').addEventListener('click',function(){
+  document.getElementById('resultOverlay').style.display='none';
+  const qa=document.querySelector('.question-box'); if(qa) qa.style.visibility='visible';
+  const bottom=document.querySelector('.bottom'); if(bottom) bottom.style.visibility='visible';
+});
+
+document.getElementById('finalizeResultsBtn').addEventListener('click',function(){
+  const score=answers.reduce((sum,ans,i)=>sum+(ans===questions[i].correct?1:0),0);
+  document.getElementById('resultOverlay').style.display='none';
+  document.getElementById('scoreText').textContent=score+' out of '+questions.length;
+  document.getElementById('scoreOverlay').style.display='flex';
+});
+
+document.getElementById('closeResultsBtn').addEventListener('click',function(){
+  document.getElementById('scoreOverlay').style.display='none';
+});
+document.getElementById('closeResultsTopBtn').addEventListener('click',function(){
+  document.getElementById('scoreOverlay').style.display='none';
+});
+
+updateClock();
 </script>
 
 

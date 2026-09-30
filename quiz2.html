@@ -192,11 +192,11 @@ function renderQuestion(){
 }
 
 document.getElementById('startBtn').onclick=async()=>{
-  try{await document.documentElement.requestFullscreen()}catch(e){}
+  startTimer();
   start.style.display='none';
   app.style.display='block';
   renderQuestion();
-  startTimer();
+  try{await document.documentElement.requestFullscreen()}catch(e){}
 };
 
 continueBtn.onclick=()=>{
@@ -234,37 +234,57 @@ document.getElementById("closeResultsTopBtn").onclick=()=>{
 };
 
 let s=12*60+28;
+let pauseRemaining=5*60;
 const time=document.getElementById('time');
+const pauseDisplay=document.querySelector('.clock div:nth-child(2) strong');
 let paused=false;
 let timerStarted=false;
-let timerInterval=null;
+let lastTick=Date.now();
 
-function updateTimer(){
-  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
-  time.textContent=[h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+function formatTime(total){
+  total=Math.max(0,Math.floor(total));
+  const h=Math.floor(total/3600);
+  const m=Math.floor((total%3600)/60);
+  const sec=total%60;
+  return [h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+}
+
+function paintTimers(){
+  time.textContent=formatTime(s);
+  if(pauseDisplay) pauseDisplay.textContent=formatTime(pauseRemaining);
 }
 
 function startTimer(){
   if(timerStarted) return;
   timerStarted=true;
-  updateTimer();
-  timerInterval=setInterval(()=>{
-    if(!paused && s>0){
-      s--;
-      updateTimer();
+  lastTick=Date.now();
+  paintTimers();
+  setInterval(()=>{
+    const now=Date.now();
+    const elapsed=Math.floor((now-lastTick)/1000);
+    if(elapsed>0){
+      lastTick += elapsed*1000;
+      if(paused){
+        pauseRemaining=Math.max(0,pauseRemaining-elapsed);
+        if(pauseRemaining===0){
+          paused=false;
+          document.getElementById('pauseBtn').textContent='PAUSE';
+        }
+      }else{
+        s=Math.max(0,s-elapsed);
+      }
+      paintTimers();
     }
-    if(s<=0 && timerInterval){
-      clearInterval(timerInterval);
-    }
-  },1000);
+  },250);
 }
 
 document.getElementById('pauseBtn').onclick=()=>{
   paused=!paused;
+  lastTick=Date.now();
   document.getElementById('pauseBtn').textContent=paused?'RESUME':'PAUSE';
 };
 
-updateTimer();
+paintTimers();
 </script>
 
 

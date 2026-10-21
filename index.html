@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NUR 131 exam 2</title>
-<style>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NUR 131 exam 2</title><style>
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#fafaf8;color:#3d3d3a}
   body{overflow:hidden}
@@ -95,17 +90,127 @@
     z-index:102;
   }
 
-</style>
-</head>
-<body>
-<div id="start" class="start">
-  <div class="start-card">
-    <h1>NUR 131 exam 2</h1>
-    <p>Fullscreen quiz preview.</p>
-    <button id="startBtn" class="btn">START</button>
-  </div>
-</div>
 
+body{overflow:auto}
+.attestation{background:#fffefb;min-height:100vh;padding:28px 36px 20px;font:14px/1.55 Arial,Helvetica,sans-serif;color:#50504c}
+.attest-inner{max-width:1120px;margin:auto}
+.attest-heading{position:relative;text-align:center;margin:0 0 40px;padding:4px 130px;color:#b85f6b;font-size:22px;font-family:Georgia,serif}
+.end-attestation{position:absolute;right:0;top:2px;background:#bfe2e4;border:0;padding:8px 12px;color:#45676b;font-size:11px;text-decoration:none;letter-spacing:.03em}
+.attestation h2{font: bold 19px/1.4 Georgia,serif;color:#b85f6b;margin:28px 0 14px}
+.attestation p{margin:12px 0}
+.attestation ul{padding-left:22px}
+.attestation li{margin:7px 0}
+.field{display:block;margin:18px 0 24px}
+.field span{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
+.attestation input[type=text]{border:1px solid #a9b2b5;border-radius:2px;background:#f0f6f7;padding:9px 10px;font:14px Arial;max-width:100%;width:220px;color:#444}
+.attestation .initial-field input{width:72px}
+.attestation input:focus{outline:2px solid #78afbd;outline-offset:2px}
+.attest-section{margin:0 0 24px}
+.additional{border:1px solid #b9b9b4;padding:20px 24px;margin:26px 0}
+.additional h3{margin:0 0 12px;font-size:17px;font-weight:normal}
+.additional li{margin:10px 0}
+.attest-rule{border:0;border-top:1px solid #999;margin:30px 0}
+.agreement{display:flex;align-items:stretch;background:#f0f1ee;margin:30px 0 34px}
+.agree-check{display:flex;gap:10px;align-items:center;padding:18px 24px;background:#e1e4df;white-space:nowrap}
+.agree-check input{width:19px;height:19px;accent-color:#6a929e}
+.agree-description{font-size:12px;line-height:1.5;padding:18px 24px;align-self:center}
+.attest-start{text-align:center;margin:28px 0 32px;font-size:12px}
+.start-test{border:1px solid #9cbec2;background:#bfe2e4;color:#355b60;padding:10px 22px;font-size:12px;cursor:pointer}
+.start-test:hover{background:#a9d5d9}
+.attest-footer{border-bottom:1px solid #a9a9a3;padding-bottom:18px;color:#777;font-size:11px}
+.attest-footer p{margin:4px 0}
+.practice-label{text-align:center;font-size:11px;color:#777;margin:10px 0}
+.form-error{color:#a52d3d;font-size:13px;min-height:20px}
+#app{height:auto;min-height:100dvh}
+.main{min-height:calc(100dvh - 130px);height:auto}
+.question-box{flex:1;min-height:260px}
+.foot{margin-top:16px}
+button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3px}
+.btn:disabled{opacity:.5;cursor:default}
+#scoreOverlay .resultBox{top:50%;left:50%;transform:translate(-50%,-50%);width:min(400px,92vw)!important}
+#resultOverlay .resultBox{width:min(490px,92vw)}
+#pausedMessage{padding:40px 0;text-align:center;font-size:20px}
+@media(max-width:720px){
+.attestation{padding:22px 16px;font-size:13px}
+.attest-heading{font-size:19px;padding:0;margin-bottom:28px}
+.end-attestation{position:static;display:block;width:max-content;margin:14px auto 0}
+.agreement{display:block}.agree-check{padding:12px 18px}.agree-description{padding:14px 18px}
+.additional{padding:16px}.topbar{height:auto;min-height:84px}.brand{margin-right:16px}
+.question-box{margin-top:28px}.choices{gap:16px}.choice{padding:6px 0}.bottom{padding-top:28px}
+#resultOverlay{top:110px;height:calc(100dvh - 110px);padding-top:40px}
+}
+</style></head><body><section id="attestation" class="attestation" aria-labelledby="attestTitle">
+<div class="attest-inner">
+<h1 class="attest-heading" id="attestTitle">Examinee Attestation<a class="end-attestation" href="#attestationEnd">END ATTESTATION</a></h1>
+<form id="attestationForm">
+<h2>Carefully read the following terms and conditions of this attestation (the “Attestation”).</h2>
+<p>This attestation sets out the expectations for completing <strong>NUR 131 exam 2</strong>. Read the entire page and complete the name, initials, and agreement fields before starting.</p>
+<p>This is an independent practice exam with 65 questions. It is intended for personal study and does not issue an official course grade, certification, or ATI result.</p>
+<p>The exam questions and any information about your attempt should be used responsibly. Do not present this practice exam as an official assessment or submit its results as proof of completing an institutional examination.</p>
+<p>Indicate your understanding, acknowledgment, and agreement where requested below.</p>
+<section class="attest-section">
+<p>Enter your full name to confirm that you are the person completing this practice attempt. Complete the questions yourself so the results reflect your own knowledge and identify areas for further review.</p>
+<label class="field"><span>Full Name *</span><input id="fullName" name="fullName" type="text" autocomplete="name" maxlength="100" required></label>
+</section>
+<section class="attest-section">
+<p>Complete this attempt honestly. Unless you are deliberately using the exam as an open-resource study exercise, do not seek answers from another person, an answer key, a website, or an artificial intelligence tool while answering questions.</p>
+<p>Do not use this practice page to obtain or distribute protected questions from a real examination. Respect the rules of your course, institution, and any assessment provider.</p>
+<p>During this practice attempt, avoid:</p>
+<ul><li>Having another person answer questions for you or completing the attempt for someone else.</li><li>Copying answers without considering the question and response options.</li><li>Claiming that practice questions are actual or verified questions from an upcoming exam.</li><li>Recording or sharing confidential content from an institutional assessment.</li><li>Using another person's identity when describing or sharing your result.</li></ul>
+<p>Enter your initials to indicate that you have read, understood, and agree with these expectations.</p>
+<label class="field initial-field"><span>Initials *</span><input name="initials1" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for honest completion"></label>
+</section>
+<section class="attest-section">
+<p>Use a suitable study environment. Prepare your device, make sure you can read the questions comfortably, and close distractions before beginning. Any materials you plan to use should be consistent with your chosen study conditions.</p>
+<p>If this practice attempt is being used alongside an instructor's assignment, follow the instructor's instructions about notes, textbooks, calculators, collaboration, and timing. This page does not replace those instructions.</p>
+<ul><li>Read each question and all response options carefully.</li><li>Select the single best answer for each question.</li><li>Use the Continue button to move forward; there is no Back button.</li><li>Complete all 65 questions before submitting whenever time permits.</li></ul>
+<p>Enter your initials to acknowledge these exam procedures.</p>
+<label class="field initial-field"><span>Initials *</span><input name="initials2" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for exam procedures"></label>
+</section>
+<section class="attest-section">
+<p>Understand the limits of this practice assessment. The questions are study material, and a practice score does not determine your competence to provide care or predict your course or licensure exam score.</p>
+<p>Use your instructor's materials and current nursing references when reviewing topics after the attempt. Discuss unclear concepts with your instructor. Do not use the questions as patient-specific clinical instructions.</p>
+<p>Enter your initials to indicate that you have read and understood these limitations.</p>
+<label class="field initial-field"><span>Initials *</span><input name="initials3" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for practice assessment limitations"></label>
+</section>
+<section class="attest-section">
+<p>If you experience a technical problem, describe the problem to the person who provided this practice website. This simulator does not connect to an instructor, an institution's gradebook, or an assessment provider's support system.</p>
+<p>The name and initials entered on this page are used only in this page's memory for this attempt and are not submitted by this form to a server. Refreshing or closing the page clears the attempt. Your browser or device may separately offer to remember form entries.</p>
+<p>Enter your initials to acknowledge how this practice page works.</p>
+<label class="field initial-field"><span>Initials *</span><input name="initials4" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for technical and privacy information"></label>
+</section>
+<section class="attest-section">
+<p>Participation in this practice exam is voluntary. You may close the page at any time. There are no fees, legal penalties, institutional disciplinary actions, or account restrictions imposed by this practice attestation.</p>
+<p>Your practice result is calculated from the answers selected during this attempt. Unanswered questions are counted as incorrect. Review the result as a guide for further study.</p>
+<p>Enter your initials to acknowledge these conditions.</p>
+<label class="field initial-field"><span>Initials *</span><input name="initials5" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for participation and scoring"></label>
+</section>
+<div class="additional">
+<h3>Additionally:</h3>
+<ol>
+<li><strong>Personal items:</strong> Set aside phones, notes, and other distractions if you want to practice under exam-like conditions.</li>
+<li><strong>Independent work:</strong> Complete the attempt yourself. Do not ask someone else to take the exam on your behalf.</li>
+<li><strong>Question count:</strong> This exam contains 65 multiple-choice practice questions, with one best answer per question.</li>
+<li><strong>Assessment results:</strong> Your result appears only after you finalize the attempt. It is a practice result, not an official ATI or college report.</li>
+<li><strong>Timing:</strong> The timer starts when you select Start Test, not while you read this page. The current time limit is 12 minutes and 28 seconds. When time expires, the attempt ends and you can view your result.</li>
+<li><strong>Pause:</strong> Use Pause to stop the timer and hide the question while taking a break. Select Resume to continue. The listed pause allowance is five minutes for the entire attempt.</li>
+<li><strong>Fullscreen:</strong> The exam will request fullscreen where supported. The browser may decline the request, and you can still complete the practice exam.</li>
+<li><strong>Practice mode:</strong> There is no live or remote proctor. This page does not activate your camera or microphone, record your screen, or monitor your room.</li>
+<li><strong>Before you start:</strong> Check that the name fields match, each initials field is complete, and you have checked the agreement below.</li>
+</ol>
+</div>
+<p>If you have questions about an official examination, contact your instructor or the official assessment provider. This independent practice page is not affiliated with ATI.</p>
+<hr class="attest-rule">
+<div id="attestationEnd">
+<p>Enter your full name to acknowledge, consent to, and accept this practice Attestation, and agree to complete this assessment honestly.</p>
+<label class="field"><span>Full Name *</span><input id="confirmName" name="confirmName" type="text" autocomplete="name" maxlength="100" required></label>
+<div class="agreement"><label class="agree-check"><input id="agree" name="agree" type="checkbox" required><span>I Agree</span></label><label class="agree-description" for="agree">By checking the I Agree button, I accept the terms above and agree to complete this practice assessment independently and responsibly.</label></div>
+<div class="attest-start"><p><strong>NUR 131 exam 2</strong> · 65 questions</p><p>When you are ready, select Start Test to begin your exam.</p><p id="formError" class="form-error" role="alert" aria-live="polite"></p><button class="start-test" id="startBtn" type="submit">START TEST</button></div>
+</div>
+</form>
+<footer class="attest-footer"><p><strong>Full screen mode is in effect during the exam where supported.</strong></p><p>Use the browser's fullscreen controls to exit fullscreen if needed.</p></footer>
+<p class="practice-label">Independent practice simulator · Not an official ATI assessment</p>
+</div></section>
 <div id="app">
   <div class="topbar">
     <div class="brand"><span class="mark"></span><span>ati</span></div>
@@ -115,7 +220,7 @@
 
   <main class="main">
     <div class="status">
-      <div class="question-label">&nbsp;</div>
+      <div class="question-label" id="questionLabel">Question 1 of 65</div>
       <div class="clock-wrap">
         <div class="clock">
           <div>Time Remaining: <strong id="time">00:12:28</strong></div>
@@ -139,119 +244,9 @@
   </main>
 </div>
 
-<script>
-const start=document.getElementById('start');
-const app=document.getElementById('app');
-const stem=document.getElementById('stem');
-const choices=document.getElementById('choices');
-const continueBtn=document.getElementById('continueBtn');
-
-const questions = [
-  {q:`A nurse is caring for a client who states, "I fail at everything I try." Which therapy would help the client identify and change this distorted thought pattern?`,a:[`Psychoanalysis`,`Cognitive behavioral therapy`,`Milieu therapy`,`Family therapy`],correct:1},
-  {q:`A nurse is reviewing treatment options for a client who has a specific phobia. Which therapy involves gradual exposure to the feared object while using relaxation techniques?`,a:[`Aversion therapy`,`Systematic desensitization`,`Psychoanalysis`,`Milieu therapy`],correct:1},
-  {q:`A nurse is caring for a client participating in dialectical behavior therapy (DBT). Which skill should the nurse expect the client to learn?`,a:[`Free association`,`Dream interpretation`,`Distress tolerance`,`Hypnosis`],correct:2},
-  {q:`A client participates in therapy that focuses on unconscious conflicts and early childhood experiences. Which type of therapy is the client receiving?`,a:[`Cognitive behavioral therapy`,`Psychoanalytic therapy`,`Behavioral therapy`,`Milieu therapy`],correct:1},
-  {q:`A nurse is caring for clients on an inpatient psychiatric unit. Which intervention is an example of milieu therapy?`,a:[`Providing a structured and safe therapeutic environment`,`Asking a client to describe childhood dreams`,`Teaching a client to challenge automatic negative thoughts`,`Exposing a client repeatedly to an anxiety-producing stimulus`],correct:0},
-  {q:`A nurse is teaching a client about behavioral therapy. Which statement by the client indicates understanding?`,a:[`"This therapy will help me explore unconscious conflicts."`,`"This therapy focuses on changing learned behaviors."`,`"This therapy focuses primarily on my childhood development."`,`"This therapy will analyze the meaning of my dreams."`],correct:1},
-  {q:`A client who has obsessive-compulsive disorder is prescribed exposure and response prevention therapy. Which action should the nurse expect?`,a:[`The client discusses unresolved childhood conflicts.`,`The client is exposed to an anxiety trigger and avoids performing the compulsion.`,`The client receives rewards for discussing emotions.`,`The client practices free association during sessions.`],correct:1},
-  {q:`A nurse is caring for a client receiving group therapy. Which is a therapeutic benefit of group therapy?`,a:[`It prevents clients from receiving feedback from others.`,`It allows clients to recognize that others have similar experiences.`,`It replaces the need for all individual treatment.`,`It focuses only on unconscious conflicts.`],correct:1},
-  {q:`A nurse is teaching a client about electroconvulsive therapy (ECT). Which disorder is ECT commonly used to treat when symptoms are severe or other treatments have not been effective?`,a:[`Severe major depressive disorder`,`Specific phobia`,`Mild adjustment disorder`,`Insomnia without another psychiatric disorder`],correct:0},
-  {q:`A nurse is caring for a client participating in cognitive behavioral therapy. Which client statement demonstrates the goal of this therapy?`,a:[`"I am learning how my thoughts affect my feelings and behaviors."`,`"I am learning to interpret all of my dreams."`,`"I am focusing only on events from early childhood."`,`"I am avoiding discussing my current thought patterns."`],correct:0},
-  {q:`A nurse is caring for a client who is receiving aversion therapy. Which intervention should the nurse expect?`,a:[`Pairing an unwanted behavior with an unpleasant stimulus`,`Encouraging the client to discuss dreams`,`Teaching the client to identify cognitive distortions`,`Providing a structured therapeutic environment`],correct:0},
-  {q:`A nurse is teaching a client about motivational interviewing. Which nursing response best reflects this approach?`,a:[`"You need to stop this behavior immediately."`,`"What changes do you think would be most realistic for you right now?"`,`"Tell me about your earliest childhood memory."`,`"I will decide which goal you should work on first."`],correct:1},
-  {q:`A nurse is caring for a client receiving family therapy. Which outcome should the nurse expect?`,a:[`Improved communication and problem-solving among family members`,`Elimination of all individual therapy needs`,`Exclusive focus on unconscious childhood conflicts`,`Use of aversive stimuli to change behavior`],correct:0},
-  {q:`A client is participating in reality therapy. Which focus should the nurse expect?`,a:[`Examining current choices and behaviors`,`Interpreting dreams and unconscious wishes`,`Reconstructing early childhood memories`,`Using medication as the primary intervention`],correct:0},
-  {q:`A nurse is caring for a client who is learning mindfulness as part of therapy. Which statement by the client indicates understanding?`,a:[`"I will focus on the present moment without judging my thoughts."`,`"I will avoid all uncomfortable feelings."`,`"I will analyze every dream for hidden meaning."`,`"I will replace all therapy sessions with meditation."`],correct:0},
-  {q:`A nurse is discussing interpersonal therapy with a client who has depression. Which area does this therapy commonly address?`,a:[`Current relationship difficulties and role transitions`,`Only unconscious childhood conflicts`,`Conditioning through unpleasant stimuli`,`Environmental structure on an inpatient unit`],correct:0},
-  {q:`A nurse is caring for a client participating in assertiveness training. Which behavior demonstrates progress?`,a:[`Expressing needs clearly while respecting others`,`Avoiding all disagreement with others`,`Using aggressive language to gain control`,`Remaining silent when feeling mistreated`],correct:0},
-  {q:`A nurse is teaching a client about biofeedback. Which statement by the client indicates understanding?`,a:[`"I will learn to control certain physiologic responses using feedback from monitoring equipment."`,`"I will explore unconscious conflicts through free association."`,`"I will be exposed to a feared object while prevented from performing rituals."`,`"I will receive a mild unpleasant stimulus whenever I feel anxious."`],correct:0},
-  {q:`A client is participating in token economy therapy on an inpatient unit. Which action should the nurse expect?`,a:[`The client earns tokens for desired behaviors that can be exchanged for rewards.`,`The client is asked to interpret recurring dreams.`,`The client is encouraged to avoid all social interaction.`,`The client is repeatedly exposed to a feared stimulus without support.`],correct:0},
-  {q:`A nurse is caring for a client receiving supportive psychotherapy. Which nursing action is most consistent with this approach?`,a:[`Reinforcing coping skills and providing encouragement`,`Focusing only on unconscious childhood conflicts`,`Pairing unwanted behavior with an unpleasant stimulus`,`Using hypnosis as the primary treatment`],correct:0}
-];
-
-let current=0;
-const answers = Array(questions.length).fill(null);
-
-function renderQuestion(){
-  stem.textContent = questions[current].q;
-  choices.innerHTML = "";
-  questions[current].a.forEach((text,i)=>{
-    const label=document.createElement("label");
-    label.className="choice";
-    const input=document.createElement("input");
-    input.type="radio";
-    input.name="q";
-    input.checked=answers[current]===i;
-    input.addEventListener("change",()=>{answers[current]=i;});
-    const span=document.createElement("span");
-    span.textContent=text;
-    label.append(input,span);
-    choices.appendChild(label);
-  });
-  continueBtn.textContent = current===questions.length-1 ? "SUBMIT" : "CONTINUE";
-}
-
-document.getElementById('startBtn').onclick=async()=>{
-  try{await document.documentElement.requestFullscreen()}catch(e){}
-  start.style.display='none';
-  app.style.display='block';
-  renderQuestion();
-};
-
-continueBtn.onclick=()=>{
-  if(current<questions.length-1){
-    current++;
-    renderQuestion();
-  }else{
-    questionArea = document.querySelector(".question-box");
-    if(questionArea) questionArea.style.visibility = "hidden";
-    document.querySelector(".bottom").style.visibility = "hidden";
-    document.getElementById("resultOverlay").style.display="flex";
-  }
-};
-
-
-document.getElementById("closeCompleteBtn").onclick=()=>{
-  document.getElementById("resultOverlay").style.display="none";
-  const qa=document.querySelector(".question-box"); if(qa) qa.style.visibility="visible";
-  document.querySelector(".bottom").style.visibility="visible";
-};
-
-document.getElementById("finalizeResultsBtn").onclick=()=>{
-  const score = answers.reduce((sum,ans,i)=>sum + (ans===questions[i].correct ? 1 : 0),0);
-  document.getElementById("resultOverlay").style.display="none";
-  document.getElementById("scoreText").textContent = `${score} out of ${questions.length}`;
-  document.getElementById("scoreOverlay").style.display="flex";
-};
-
-document.getElementById("closeResultsBtn").onclick=()=>{
-  document.getElementById("scoreOverlay").style.display="none";
-};
-
-document.getElementById("closeResultsTopBtn").onclick=()=>{
-  document.getElementById("scoreOverlay").style.display="none";
-};
-
-let s=12*60+28;
-const time=document.getElementById('time');
-let paused=false;
-document.getElementById('pauseBtn').onclick=()=>{
-  paused=!paused;
-  document.getElementById('pauseBtn').textContent=paused?'RESUME':'PAUSE';
-};
-setInterval(()=>{
-  if(!paused && s>0){
-    s--;
-    const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
-    time.textContent=[h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
-  }
-},1000);
-</script>
-
-
 <div id="resultOverlay" class="resultOverlay">
   <div class="resultShell">
-    <button id="closeCompleteBtn" class="closeX">&#8855; CLOSE</button>
+    <button id="closeCompleteBtn" class="closeX" style="display:none">&#8855; CLOSE</button>
     <div class="resultBox">
       <h3>Assessment Completed!</h3>
       <p>How would you like to proceed?</p>
@@ -274,5 +269,111 @@ setInterval(()=>{
     </div>
   </div>
 </div>
-</body>
-</html>
+<script>
+const questions = [
+  {q:`A nurse is caring for a client who states, "I fail at everything I try." Which therapy would help the client identify and change this distorted thought pattern?`,a:[`Psychoanalysis`,`Cognitive behavioral therapy`,`Milieu therapy`,`Family therapy`],correct:1},
+  {q:`A nurse is reviewing treatment options for a client who has a specific phobia. Which therapy involves gradual exposure to the feared object while using relaxation techniques?`,a:[`Aversion therapy`,`Systematic desensitization`,`Psychoanalysis`,`Milieu therapy`],correct:1},
+  {q:`A nurse is caring for a client participating in dialectical behavior therapy (DBT). Which skill should the nurse expect the client to learn?`,a:[`Free association`,`Dream interpretation`,`Distress tolerance`,`Hypnosis`],correct:2},
+  {q:`A client participates in therapy that focuses on unconscious conflicts and early childhood experiences. Which type of therapy is the client receiving?`,a:[`Cognitive behavioral therapy`,`Psychoanalytic therapy`,`Behavioral therapy`,`Milieu therapy`],correct:1},
+  {q:`A nurse is caring for clients on an inpatient psychiatric unit. Which intervention is an example of milieu therapy?`,a:[`Providing a structured and safe therapeutic environment`,`Asking a client to describe childhood dreams`,`Teaching a client to challenge automatic negative thoughts`,`Exposing a client repeatedly to an anxiety-producing stimulus`],correct:0},
+  {q:`A nurse is teaching a client about behavioral therapy. Which statement by the client indicates understanding?`,a:[`"This therapy will help me explore unconscious conflicts."`,`"This therapy focuses on changing learned behaviors."`,`"This therapy focuses primarily on my childhood development."`,`"This therapy will analyze the meaning of my dreams."`],correct:1},
+  {q:`A client who has obsessive-compulsive disorder is prescribed exposure and response prevention therapy. Which action should the nurse expect?`,a:[`The client discusses unresolved childhood conflicts.`,`The client is exposed to an anxiety trigger and avoids performing the compulsion.`,`The client receives rewards for discussing emotions.`,`The client practices free association during sessions.`],correct:1},
+  {q:`A nurse is caring for a client receiving group therapy. Which is a therapeutic benefit of group therapy?`,a:[`It prevents clients from receiving feedback from others.`,`It allows clients to recognize that others have similar experiences.`,`It replaces the need for all individual treatment.`,`It focuses only on unconscious conflicts.`],correct:1},
+  {q:`A nurse is teaching a client about electroconvulsive therapy (ECT). Which disorder is ECT commonly used to treat when symptoms are severe or other treatments have not been effective?`,a:[`Severe major depressive disorder`,`Specific phobia`,`Mild adjustment disorder`,`Insomnia without another psychiatric disorder`],correct:0},
+  {q:`A nurse is caring for a client participating in cognitive behavioral therapy. Which client statement demonstrates the goal of this therapy?`,a:[`"I am learning how my thoughts affect my feelings and behaviors."`,`"I am learning to interpret all of my dreams."`,`"I am focusing only on events from early childhood."`,`"I am avoiding discussing my current thought patterns."`],correct:0},
+  {q:`A nurse is caring for a client who is receiving aversion therapy. Which intervention should the nurse expect?`,a:[`Pairing an unwanted behavior with an unpleasant stimulus`,`Encouraging the client to discuss dreams`,`Teaching the client to identify cognitive distortions`,`Providing a structured therapeutic environment`],correct:0},
+  {q:`A nurse is teaching a client about motivational interviewing. Which nursing response best reflects this approach?`,a:[`"You need to stop this behavior immediately."`,`"What changes do you think would be most realistic for you right now?"`,`"Tell me about your earliest childhood memory."`,`"I will decide which goal you should work on first."`],correct:1},
+  {q:`A nurse is caring for a client receiving family therapy. Which outcome should the nurse expect?`,a:[`Improved communication and problem-solving among family members`,`Elimination of all individual therapy needs`,`Exclusive focus on unconscious childhood conflicts`,`Use of aversive stimuli to change behavior`],correct:0},
+  {q:`A client is participating in reality therapy. Which focus should the nurse expect?`,a:[`Examining current choices and behaviors`,`Interpreting dreams and unconscious wishes`,`Reconstructing early childhood memories`,`Using medication as the primary intervention`],correct:0},
+  {q:`A nurse is caring for a client who is learning mindfulness as part of therapy. Which statement by the client indicates understanding?`,a:[`"I will focus on the present moment without judging my thoughts."`,`"I will avoid all uncomfortable feelings."`,`"I will analyze every dream for hidden meaning."`,`"I will replace all therapy sessions with meditation."`],correct:0},
+  {q:`A nurse is discussing interpersonal therapy with a client who has depression. Which area does this therapy commonly address?`,a:[`Current relationship difficulties and role transitions`,`Only unconscious childhood conflicts`,`Conditioning through unpleasant stimuli`,`Environmental structure on an inpatient unit`],correct:0},
+  {q:`A nurse is caring for a client participating in assertiveness training. Which behavior demonstrates progress?`,a:[`Expressing needs clearly while respecting others`,`Avoiding all disagreement with others`,`Using aggressive language to gain control`,`Remaining silent when feeling mistreated`],correct:0},
+  {q:`A nurse is teaching a client about biofeedback. Which statement by the client indicates understanding?`,a:[`"I will learn to control certain physiologic responses using feedback from monitoring equipment."`,`"I will explore unconscious conflicts through free association."`,`"I will be exposed to a feared object while prevented from performing rituals."`,`"I will receive a mild unpleasant stimulus whenever I feel anxious."`],correct:0},
+  {q:`A client is participating in token economy therapy on an inpatient unit. Which action should the nurse expect?`,a:[`The client earns tokens for desired behaviors that can be exchanged for rewards.`,`The client is asked to interpret recurring dreams.`,`The client is encouraged to avoid all social interaction.`,`The client is repeatedly exposed to a feared stimulus without support.`],correct:0},
+  {q:`A nurse is caring for a client receiving supportive psychotherapy. Which nursing action is most consistent with this approach?`,a:[`Reinforcing coping skills and providing encouragement`,`Focusing only on unconscious childhood conflicts`,`Pairing unwanted behavior with an unpleasant stimulus`,`Using hypnosis as the primary treatment`],correct:0}
+];
+const extra = [["A client says, ‘I made one mistake, so I am a complete failure.’ Which cognitive distortion is present?", "All-or-nothing thinking", "Thought blocking", "Flight of ideas", "Neologisms", 0], ["During CBT, a client writes down a stressful situation, the automatic thought, and the resulting feeling. Which tool is being used?", "A dream journal", "A thought record", "A token chart", "An exposure hierarchy", 1], ["A client predicts that everyone will laugh at a presentation. Which CBT response best encourages examination of the prediction?", "That definitely will not happen.", "You should cancel it.", "What evidence supports or challenges that prediction?", "Why are you so negative?", 2], ["A client receiving CBT has not completed a thought-record assignment. Which response best supports collaboration?", "You must complete it or leave therapy.", "I will do it for you.", "There is no point continuing.", "What got in the way, and how could we make the assignment manageable?", 3], ["A client assumes a friend is angry because a message has not been answered. Which alternative thought is most balanced?", "My friend may be busy; I do not yet know why there is no reply.", "My friend always hates me.", "No one will ever answer me.", "I must stop having friends.", 0], ["A client with depression schedules a short walk and a previously enjoyed activity as part of treatment. Which intervention does this illustrate?", "Dream analysis", "Behavioral activation", "Aversion therapy", "Free association", 1], ["A client practices saying hello to one coworker to test the belief that every coworker will reject them. Which CBT technique is this?", "Interpretation of dreams", "Transference analysis", "A behavioral experiment", "Punishment", 2], ["Which client statement best demonstrates cognitive restructuring?", "I will avoid every stressful situation.", "A mistake proves I am worthless.", "My thoughts cannot be questioned.", "One difficult day does not mean that every day will be difficult.", 3], ["A client learns a coping skill in a session. Which assignment best supports use of the skill outside treatment?", "Practice the skill in one agreed-upon situation and record what happened.", "Wait for the therapist to be present every time.", "Avoid all situations that involve feelings.", "Stop all other parts of the treatment plan.", 0], ["A client says, ‘I should never feel anxious.’ Which response best supports a realistic treatment goal?", "Yes, all anxiety must disappear immediately.", "We can work on responding to anxiety so it interferes less with your life.", "Feeling anxious means therapy has failed.", "Avoid anything that causes any discomfort.", 1], ["A client in DBT is learning to notice an emotion without immediately acting on it. Which skill is being practiced?", "Dream interpretation", "Free association", "Mindfulness", "Aversion", 2], ["A client in DBT has an urge to send an angry message and chooses to pause and use a coping skill. Which outcome does this demonstrate?", "Complete elimination of emotions", "Increased dependence on the therapist", "Unconscious conflict resolution", "Improved emotion regulation", 3], ["Which response best combines acceptance and change in DBT?", "Your feelings make sense, and we can work on a safer response.", "Your feelings are wrong.", "Nothing about your behavior needs attention.", "You must change before I listen.", 0], ["A client practices requesting help clearly, setting limits, and respecting another person's needs. Which DBT skill area is emphasized?", "Dream analysis", "Interpersonal effectiveness", "Free association", "Classical conditioning", 1], ["Which client action best demonstrates distress tolerance?", "Demanding that all discomfort disappear immediately", "Acting on every impulse", "Using a practiced grounding skill while an upsetting feeling passes", "Ignoring every treatment goal", 2], ["A client practicing mindfulness notices their attention has wandered. Which instruction is appropriate?", "Punish yourself for losing focus.", "Stop because you have failed.", "Force all thoughts to disappear.", "Gently bring attention back to the present activity.", 3], ["Before beginning gradual exposure for a phobia, which activity helps organize treatment?", "Collaboratively rank feared situations from least to most distressing.", "Select the most frightening situation without discussion.", "Promise that no anxiety will occur.", "Avoid discussing the client's goals.", 0], ["A client afraid of dogs practices relaxation while viewing a picture of a dog before progressing to later steps. Which approach is illustrated?", "Flooding", "Systematic desensitization", "Psychoanalysis", "Token economy", 1], ["During planned exposure, a client says anxiety has increased. Which response best supports treatment?", "You must continue regardless of safety or consent.", "You have failed the treatment.", "Let us review the agreed plan and use the coping skills you practiced.", "You should never feel anxious during treatment.", 2], ["A client with OCD touches an agreed-upon trigger and practices resisting the usual checking ritual with therapist support. What is the response-prevention component?", "Discussing a dream", "Receiving a reward for attendance", "Avoiding the trigger entirely", "Not performing the usual ritual", 3], ["Which statement indicates a need for further teaching about exposure therapy?", "I should completely avoid the feared situation between every session.", "My therapist and I will plan the treatment together.", "I may experience discomfort while practicing.", "I will use the strategies included in my treatment plan.", 0], ["A nurse gives specific praise immediately after a client uses a newly learned communication skill. Which learning principle is being used?", "Extinction", "Positive reinforcement", "Projection", "Free association", 1], ["A client earns a token after completing a clearly defined treatment activity. Which action makes the token system most consistent?", "Change the rules without telling the client.", "Use food and water as rewards that can be withheld.", "Apply the agreed criteria consistently and explain how tokens may be exchanged.", "Give tokens only when staff remember.", 2], ["A client learns a complex skill through reinforcement of small steps toward the final goal. Which technique is being used?", "Flooding", "Interpretation", "Suppression", "Shaping", 3], ["A nurse demonstrates a calm way to request assistance, then invites the client to practice. Which technique is being used?", "Modeling", "Dream analysis", "Aversion therapy", "Free association", 0], ["A client rehearses declining an unreasonable request with the nurse before trying it at home. Which intervention is this?", "Interpretation of resistance", "Role-play", "Flooding", "Token removal", 1], ["Which statement is an example of assertive communication?", "You never help, and you are useless.", "I will agree even though I cannot do it.", "I cannot take on that task today; I can discuss another option.", "You should already know what I need.", 2], ["A client says, ‘Part of me wants to change, but part of me does not.’ Which motivational interviewing response is most appropriate?", "There is only one acceptable answer.", "You are being difficult.", "I will decide for you.", "What do you see as the benefits and difficulties of making a change?", 3], ["Which nurse statement is an open-ended question?", "What concerns you most about making this change?", "Did you attend the appointment?", "Are you taking the medication?", "Is your next visit Monday?", 0], ["A client describes returning to treatment after a setback. Which response is an affirmation?", "You should never have had a setback.", "Returning shows persistence in working toward your goal.", "Everything will be perfect now.", "You need to follow my plan exactly.", 1], ["A client says, ‘I want better sleep, but I use my phone in bed for hours.’ Which response best explores discrepancy?", "You clearly do not care about sleep.", "There is nothing you can change.", "How does using your phone in bed fit with your goal of better sleep?", "You must throw your phone away.", 2], ["A client rates confidence in making a change as 4 out of 10. Which follow-up best invites discussion of strengths?", "Why is your score so low?", "You need to be at 10.", "A score of 4 means you cannot change.", "What helps your confidence be a 4 rather than a 1?", 3], ["Which client statement is change talk?", "I want to try one small step this week.", "There is no reason to do anything differently.", "Nothing about this matters to me.", "I will never consider another option.", 0], ["A nurse reflects, ‘You want the benefits of treatment, and you are worried about what it will involve.’ Which approach is demonstrated?", "Confrontation", "Reflective listening", "Giving advice", "Changing the subject", 1], ["A client says, ‘No one understands how hard this has been.’ Which response is most therapeutic?", "Everyone has problems.", "At least it could be worse.", "This has been very difficult for you. Tell me more.", "You should stop thinking about it.", 2], ["A client becomes tearful during a conversation. Which nursing response best offers presence?", "Please stop crying.", "I know exactly how you feel.", "You should focus on something happier.", "I can sit with you while you talk or take a moment.", 3], ["A client says, ‘I feel strange.’ Which response seeks clarification?", "What does ‘strange’ feel like for you?", "You probably just need sleep.", "Everyone feels strange sometimes.", "That is not a useful description.", 0], ["Which response avoids false reassurance?", "I guarantee that everything will be fine.", "I cannot predict the outcome, but we can discuss your concerns and next steps.", "There is nothing to worry about.", "You will definitely be cured tomorrow.", 1], ["A group member realizes that other members have experienced similar difficulties. Which therapeutic factor is illustrated?", "Dream interpretation", "Aversion", "Universality", "Punishment", 2], ["One group member speaks for nearly the entire session. Which facilitator response supports participation?", "End the group immediately.", "Ignore the other members.", "Shame the member in front of everyone.", "Thank you for sharing. Let us hear from someone who has not spoken yet.", 3], ["During a therapy group, one member insults another. Which facilitator action best supports a therapeutic environment?", "Restate the group expectation for respectful communication and redirect the discussion.", "Encourage the insulted member to retaliate.", "Allow the behavior to continue without response.", "Ask everyone to choose sides.", 0], ["A family practices taking turns speaking and restating what the other person said before responding. Which treatment goal does this support?", "Eliminating every disagreement", "Improving communication", "Identifying a single person to blame", "Preventing individual expression", 1], ["A family asks the nurse to decide who is responsible for every problem. Which response best supports family work?", "Only one person can cause family difficulties.", "We should avoid discussing interactions.", "Let us examine the patterns between family members and goals you can work on together.", "I will choose the family member who must change.", 2], ["A client uses biofeedback equipment during relaxation practice. What information does the equipment provide?", "An interpretation of dreams", "A diagnosis of unconscious conflict", "A guarantee that symptoms will never recur", "Feedback about a measured physiologic response", 3], ["Which outcome best shows that a client is applying a learned coping skill in daily life?", "The client recognizes stress at work, uses the practiced skill, and evaluates whether it helped.", "The client can repeat the name of the therapy but never practices.", "The client waits for staff to make all decisions.", "The client assumes that one difficult day means treatment has failed.", 0]];
+questions.push(...extra.map(([q,...rest])=>({q,a:rest.slice(0,4),correct:rest[4]})));
+const answers=Array(questions.length).fill(null);
+const app=document.getElementById('app');
+const stem=document.getElementById('stem');
+const choices=document.getElementById('choices');
+const continueBtn=document.getElementById('continueBtn');
+const pauseBtn=document.getElementById('pauseBtn');
+const time=document.getElementById('time');
+const questionLabel=document.getElementById('questionLabel');
+const form=document.getElementById('attestationForm');
+const fullName=document.getElementById('fullName');
+const confirmName=document.getElementById('confirmName');
+const formError=document.getElementById('formError');
+let current=0,remaining=12*60+28,pauseRemaining=5*60,paused=false,started=false,completed=false,finalized=false,clockId=null;
+const timeText=(s)=>[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':');
+const pauseTime=document.querySelector('.clock div:nth-child(2) strong');
+const questionBox=document.querySelector('.question-box');
+const pausedMessage=document.createElement('div');
+pausedMessage.id='pausedMessage';pausedMessage.textContent='Assessment paused';pausedMessage.hidden=true;
+questionBox.after(pausedMessage);
+function updateClock(){time.textContent=timeText(remaining);pauseTime.textContent=timeText(pauseRemaining);}
+function renderQuestion(){
+  questionLabel.textContent=`Question ${current+1} of ${questions.length}`;
+  stem.textContent=questions[current].q;choices.innerHTML='';
+  questions[current].a.forEach((text,i)=>{
+    const label=document.createElement('label');label.className='choice';
+    const input=document.createElement('input');input.type='radio';input.name='q';input.value=String(i);input.checked=answers[current]===i;
+    input.addEventListener('change',()=>{answers[current]=i;});
+    const span=document.createElement('span');span.textContent=text;label.append(input,span);choices.appendChild(label);
+  });
+  continueBtn.textContent=current===questions.length-1?'SUBMIT':'CONTINUE';
+}
+function setPaused(value){
+  if(!started||completed)return;
+  paused=value;questionBox.style.visibility=value?'hidden':'visible';pausedMessage.hidden=!value;
+  continueBtn.disabled=value;pauseBtn.textContent=value?'RESUME':'PAUSE';
+}
+function finishExam(expired=false){
+  if(completed)return;
+  completed=true;paused=false;clearInterval(clockId);pausedMessage.hidden=true;
+  questionBox.style.visibility='hidden';document.querySelector('.bottom').style.visibility='hidden';pauseBtn.disabled=true;
+  document.querySelector('#resultOverlay h3').textContent=expired?'Time Expired':'Assessment Completed!';
+  document.querySelector('#resultOverlay p').textContent='Finalize your assessment to view your results.';
+  document.getElementById('resultOverlay').style.display='flex';
+  document.getElementById('finalizeResultsBtn').focus();
+}
+function tick(){
+  if(!started||completed)return;
+  if(paused){pauseRemaining=Math.max(0,pauseRemaining-1);if(pauseRemaining===0)setPaused(false);}
+  else{remaining=Math.max(0,remaining-1);if(remaining===0)finishExam(true);}
+  updateClock();
+}
+const normalized=s=>s.trim().replace(/\s+/g,' ').toLowerCase();
+form.addEventListener('input',()=>{confirmName.setCustomValidity('');formError.textContent='';});
+form.addEventListener('submit',(event)=>{
+  event.preventDefault();if(started)return;
+  for(const input of form.querySelectorAll('input[type=text]')){
+    if(!input.value.trim()){input.setCustomValidity('Please complete this field.');input.addEventListener('input',()=>input.setCustomValidity(''),{once:true});input.reportValidity();return;}
+  }
+  if(normalized(fullName.value)!==normalized(confirmName.value)){
+    formError.textContent='Please enter the same full name in both name fields.';
+    confirmName.setCustomValidity('Enter the same full name as above.');confirmName.reportValidity();return;
+  }
+  if(!form.reportValidity())return;
+  started=true;document.getElementById('attestation').style.display='none';app.style.display='block';window.scrollTo(0,0);
+  renderQuestion();updateClock();clockId=setInterval(tick,1000);
+  if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{});}
+});
+continueBtn.addEventListener('click',()=>{if(!started||completed||paused)return;if(current<questions.length-1){current++;renderQuestion();window.scrollTo(0,0);}else{finishExam();}});
+pauseBtn.addEventListener('click',()=>{if(pauseRemaining>0)setPaused(!paused);});
+document.getElementById('finalizeResultsBtn').addEventListener('click',()=>{
+  if(finalized)return;finalized=true;
+  const score=answers.reduce((n,a,i)=>n+(a===questions[i].correct?1:0),0);
+  const unanswered=answers.filter(a=>a===null).length;
+  document.getElementById('resultOverlay').style.display='none';
+  document.getElementById('scoreText').textContent=`${score} out of ${questions.length} (${Math.round(score/questions.length*100)}%). Unanswered: ${unanswered}.`;
+  document.getElementById('scoreOverlay').style.display='flex';document.getElementById('closeResultsBtn').focus();
+});
+function closeResults(){document.getElementById('scoreOverlay').style.display='none';}
+document.getElementById('closeResultsBtn').addEventListener('click',closeResults);
+document.getElementById('closeResultsTopBtn').addEventListener('click',closeResults);
+document.getElementById('closeCompleteBtn').addEventListener('click',()=>{document.getElementById('finalizeResultsBtn').focus();});
+updateClock();
+</script></body></html>

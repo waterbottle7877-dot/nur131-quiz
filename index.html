@@ -186,7 +186,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 </section>
 <section class="attest-section">
 <p>Participation in this practice exam is voluntary. You may close the page at any time. There are no fees, legal penalties, institutional disciplinary actions, or account restrictions imposed by this practice attestation.</p>
-<p>Your practice result is calculated from the answers selected during this attempt. Unanswered questions are counted as incorrect. Review the result as a guide for further study.</p>
+<p>When you finalize this attempt, you will see a completion message. No score, percentage, or answer count is displayed.</p>
 <p>Enter your initials to acknowledge these conditions.</p>
 <label class="field initial-field"><span>Initials *</span><input name="initials5" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for participation and scoring"></label>
 </section>
@@ -196,7 +196,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 <li><strong>Personal items:</strong> Set aside phones, notes, and other distractions if you want to practice under exam-like conditions.</li>
 <li><strong>Independent work:</strong> Complete the attempt yourself. Do not ask someone else to take the exam on your behalf.</li>
 <li><strong>Question count:</strong> This exam contains 65 multiple-choice practice questions, with one best answer per question.</li>
-<li><strong>Assessment results:</strong> Your result appears only after you finalize the attempt. It is a practice result, not an official ATI or college report.</li>
+<li><strong>Assessment results:</strong> After you finalize the attempt, a completion message appears. No score is displayed. This is not an official ATI or college report.</li>
 <li><strong>Timing:</strong> The timer starts when you select Start Test, not while you read this page. The current time limit is 12 minutes and 28 seconds. When time expires, the attempt ends and you can view your result.</li>
 <li><strong>Pause:</strong> Use Pause to stop the timer and hide the question while taking a break. Select Resume to continue. The listed pause allowance is five minutes for the entire attempt.</li>
 <li><strong>Fullscreen:</strong> The exam will request fullscreen where supported. The browser may decline the request, and you can still complete the practice exam.</li>
@@ -370,10 +370,8 @@ continueBtn.addEventListener('click',()=>{if(!started||completed||paused)return;
 pauseBtn.addEventListener('click',()=>{if(pauseRemaining>0)setPaused(!paused);});
 document.getElementById('finalizeResultsBtn').addEventListener('click',()=>{
   if(finalized)return;finalized=true;
-  const score=answers.reduce((n,a,i)=>n+(a===questions[i].correct?1:0),0);
-  const unanswered=answers.filter(a=>a===null).length;
   document.getElementById('resultOverlay').style.display='none';
-  document.getElementById('scoreText').textContent=`${score} out of ${questions.length} (${Math.round(score/questions.length*100)}%). Unanswered: ${unanswered}.`;
+  document.getElementById('scoreText').textContent='Your assessment has been submitted.';
   document.getElementById('scoreOverlay').style.display='flex';document.getElementById('closeResultsBtn').focus();
 });
 function closeResults(){document.getElementById('scoreOverlay').style.display='none';}

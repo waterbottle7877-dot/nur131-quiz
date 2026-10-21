@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Learn - Study Materials - My ATI</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; min-height: 100%; font-family: Arial, Helvetica, sans-serif; background: #f7f7f5; color: #2f2f2c; }
+  body { overflow-x: hidden; }
+  #app { min-height: 100vh; width: 100%; background: #fbfbfa; border-top: 6px solid #b2444f; display: flex; flex-direction: column; }
+  .topbar { display:flex; align-items:center; gap:18px; padding:24px 32px 18px; background:#f4f4f2; border-bottom:1px solid #d8d8d4; }
+  .brand { display:flex; align-items:center; gap:10px; min-width:110px; font-size:33px; color:#666; font-weight:300; letter-spacing:-2px; }
+  .brandMark { width:36px; height:36px; position:relative; display:inline-block; transform:rotate(-25deg); }
+  .brandMark:before,.brandMark:after { content:""; position:absolute; background:#b96871; border-radius:1px; }
+  .brandMark:before { width:35px; height:5px; left:0; top:15px; }
+  .brandMark:after { height:35px; width:5px; top:0; left:15px; }
+  .quizName { font-weight:600; font-size:18px; flex:1; }
+  .stripe { height:16px; background:repeating-linear-gradient(125deg,transparent 0 7px,#c6c6c1 7px 9px,transparent 9px 14px); opacity:.65; border-bottom:1px solid #ddd; }
+  .exam { flex:1; display:flex; flex-direction:column; min-height:calc(100vh - 110px); padding:28px 34px 20px; }
+  .status { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; border-bottom:1px solid #e4e4df; padding-bottom:20px; }
+  .qcount { font-size:29px; font-weight:600; color:#4d4d4a; }
+  .clockArea { display:flex; align-items:center; gap:14px; font-size:13px; text-align:right; color:#4e4e4a; }
+  .clockLines { line-height:1.65; }
+  button { font:inherit; }
+  .pauseBtn,.navBtn,.startBtn,.restartBtn { min-height:46px; padding:10px 18px; border:1px solid #b8b8b3; background:#e8e8e5; color:#444; font-weight:700; border-radius:2px; cursor:pointer; }
+  .questionArea { padding:72px 12px 30px; flex:1; }
+  .stem { font-size:19px; line-height:1.6; margin-bottom:34px; max-width:1250px; }
+  .options { display:grid; gap:16px; max-width:1250px; }
+  .option { display:flex; align-items:flex-start; gap:15px; padding:14px; border:1px solid transparent; border-radius:4px; cursor:pointer; min-height:54px; }
+  .option:hover { background:#f0f0ed; }
+  .option.selected { border-color:#9a6a70; background:#f6ecee; }
+  .option input { appearance:none; width:24px; height:24px; border:2px solid #777; border-radius:50%; margin:1px 0 0; flex:none; background:#fff; position:relative; }
+  .option input:checked { border-color:#964d57; }
+  .option input:checked:after { content:""; position:absolute; width:10px; height:10px; border-radius:50%; background:#964d57; top:5px; left:5px; }
+  .optionText { font-size:17px; line-height:1.5; }
+  .navrow { display:flex; justify-content:flex-end; gap:12px; padding:22px 0 16px; border-top:1px solid #e4e4df; }
+  .navBtn { padding:11px 30px; }
+  .navBtn:disabled { opacity:.42; cursor:not-allowed; }
+  .footerNote { display:flex; gap:10px; align-items:flex-start; border-top:1px solid #e3e3de; padding:14px 3px 4px; color:#696965; font-size:11px; line-height:1.45; }
+  .tinyMark { color:#b05b64; font-size:18px; font-weight:bold; }
+  .startOverlay { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px; background:#f7f7f5; }
+  .startCard { max-width:650px; width:100%; background:#fff; border:1px solid #d9d9d4; padding:34px; text-align:center; }
+  .startCard h1 { margin:0 0 12px; font-size:30px; }
+  .startCard p { color:#666; line-height:1.6; }
+  .startBtn { margin-top:14px; min-width:190px; }
+  .result { display:none; min-height:100vh; padding:90px 30px 40px; background:#fbfbfa; text-align:center; }
+  .result h2 { font-size:32px; margin:0 0 10px; }
+  .score { font-size:58px; font-weight:700; margin:14px 0; color:#5b4f51; }
+  .review { margin:34px auto 0; max-width:900px; text-align:left; display:grid; gap:12px; }
+  .reviewItem { padding:15px 16px; border:1px solid #ddd; background:#fff; font-size:14px; line-height:1.5; }
+  .fullscreenWarning { display:none; position:fixed; inset:0; z-index:9999; background:#fbfbfa; align-items:center; justify-content:center; text-align:center; padding:30px; }
+  .fullscreenWarning .box { max-width:600px; border:1px solid #ccc; background:#fff; padding:30px; }
+  .fullscreenWarning h2 { margin-top:0; }
+  @media(max-width:700px){
+    .topbar{padding:16px 14px;gap:10px;}
+    .brand{font-size:25px;min-width:76px;}
+    .quizName{font-size:14px;}
+    .exam{padding:18px 14px 14px;}
+    .status{gap:8px;}
+    .qcount{font-size:20px;}
+    .clockArea{font-size:11px;gap:7px;}
+    .questionArea{padding:42px 0 22px;}
+    .stem{font-size:16px;}
+    .optionText{font-size:15px;}
+    .navrow{justify-content:stretch;}
+    .navBtn{flex:1;padding:10px;}
+  }
+
+/* Screenshot-matched scrollable, centered dashboard */
+.ati-landing{min-height:100vh;background:#fff;color:#464646;font-family:Arial,Helvetica,sans-serif;font-size:13px;}
+.ati-line{height:6px;background:#cb5e5e;margin-top:56px;}
+.ati-nav{max-width:850px;margin:auto;display:flex;justify-content:center;gap:38px;padding:24px 5px;border-bottom:1px solid #ddd;font-size:14px;}
+.ati-main{max-width:850px;margin:30px auto 75px;padding:0 12px;}
+.ati-main h1{font-size:27px;font-weight:400;margin:0 0 24px;}
+.ati-subnav{display:flex;gap:65px;padding:13px 15px 21px;border-bottom:1px solid #d5d5d5;font-size:13px;}
+.ati-utility{display:flex;justify-content:space-between;align-items:center;margin:20px 0 35px;}
+.ati-utility h2{font-size:16px;font-weight:400;margin:0;}
+.ati-utility select{width:175px;}
+.ati-main select{height:32px;border:1px solid #aaa;background:#fafafa;color:#444;padding:0 9px;}
+.ati-tabs{display:flex;gap:4px;align-items:end;margin-bottom:16px;white-space:nowrap;}
+.ati-tabs>*{border:1px solid #d3d3d3;padding:12px 16px;font-weight:400;display:inline-block;}
+.ati-tabs strong{border-color:#73828c;box-shadow:0 0 0 1px #99a9ae inset;font-weight:400;}
+.ati-filter{display:flex;gap:20px;align-items:center;justify-content:space-between;}
+.ati-filter label{display:flex;gap:12px;align-items:center;}
+.ati-filter select{min-width:130px;}
+.ati-add{border:1px solid #c8a7a7;background:#fff;color:#39717a;padding:10px 12px;white-space:nowrap;}
+.ati-check{font-size:11px;margin:19px 0;}
+.ati-notice{border:1px solid #aaa;max-width:660px;display:flex;gap:20px;align-items:center;justify-content:space-between;padding:10px;font-size:11px;line-height:1.4;}
+.ati-notice span{white-space:nowrap;text-decoration:underline;font-weight:bold;}
+.ati-desc{margin:22px 0 16px;font-size:11px;}
+.ati-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 15px;}
+.ati-card{border:1px solid #d0d0d0;min-height:196px;display:flex;flex-direction:column;align-items:stretch;padding:0 9px 8px;box-shadow:0 1px 2px #eee;}
+.ati-kind{background:#f0dfe7;color:#60575d;margin:0 -9px;padding:4px 7px;font-size:10px;display:flex;justify-content:space-between;}
+.ati-card p{font-size:11px;line-height:1.35;margin:9px 0 8px;flex:1;}
+.ati-card button{height:31px;width:100%;font-weight:600;color:white;background:#288994;border:0;cursor:pointer;}
+.ati-card button[disabled]{background:#e6e6e6;color:#999;cursor:default;}
+.ati-card small{font-size:8px;color:#999;margin-top:5px;}
+.ati-card em{font-size:10px;color:#888;font-style:normal;margin-bottom:10px;}
+.ati-card.exam-card{border:2px solid #328c96;}
+.ati-foot{text-align:center;border-top:1px solid #ddd;margin-top:40px;padding:20px;color:#999;font-size:10px;}
+@media(max-width:700px){.ati-main{margin:20px auto;padding:0 14px}.ati-nav{gap:15px;font-size:11px;flex-wrap:wrap}.ati-cards{grid-template-columns:repeat(2,minmax(0,1fr));}.ati-tabs{overflow-x:auto}.ati-filter{flex-wrap:wrap;justify-content:start}.ati-utility{margin-bottom:20px}.ati-landing{font-size:12px}}
+
+
+/* Refinement from the close-up reference */
+.ati-landing{font-size:14px;color:#555;background:#fff;}
+.ati-line{background:#c85c59;height:5px}
+.ati-main{max-width:870px}
+.ati-subnav{gap:74px;font-size:14px}
+.ati-tabs>*{font-size:13px;padding:13px 17px;background:#fff}
+.ati-tabs strong{font-weight:600;border:0;border-bottom:2px solid #8e969c;box-shadow:none}
+.ati-filter select{min-width:155px;background:#fff}
+.ati-card{min-height:236px;border:1px solid #d2c9c7;padding:0 10px 9px;box-shadow:none;position:relative;background:#fff;}
+.ati-kind{align-self:flex-start;display:block;position:relative;margin:0 0 0 -10px;padding:5px 15px 5px 10px;background:#e9cedc;color:#5d5360;font-size:12px;line-height:1.12;clip-path:polygon(0 0,100% 0,100% 100%,7px 100%);}
+.ati-kind span{position:absolute;right:-20px;color:#666;}
+.ati-card p{font-size:13px;line-height:1.38;margin:14px 1px 8px;flex:1;color:#555}
+.ati-card button{height:36px;background:#26818d;font-size:12px;font-weight:bold;border:0;color:white;}
+.ati-card button:hover{background:#1e737d}
+.ati-card small{font-size:9px;color:#999;margin-top:8px}
+.ati-cards{gap:13px 15px;margin-left:5px;margin-right:5px}
+.ati-card.exam-card{border:1px solid #d2c9c7;}
+.ati-card.exam-card .ati-kind{background:#e9cedc}
+.ati-notice{max-width:790px;font-size:12px;padding:12px}
+.ati-check,.ati-desc{font-size:12px}
+.ati-card em{font-size:10px}
+@media(max-width:700px){.ati-card{min-height:220px}.ati-card p{font-size:12px}.ati-kind{font-size:11px}.ati-main{width:100%}}
+
+/* 21 Oct reference photo: muted lilac labels, blue-green buttons, narrow centered cards */
+.ati-landing{font-family:Arial,'Segoe UI',sans-serif!important;background:#fff!important;color:#4d4d4d!important;font-size:13px!important;line-height:1.35}
+.ati-main{max-width:835px!important;margin:27px auto 80px!important;padding:0 16px!important}
+.ati-main h1{font-family:Georgia,serif;font-weight:400;font-size:26px;margin-bottom:21px;color:#555}
+.ati-subnav{font-family:Arial,sans-serif;font-size:13px;gap:66px;padding-bottom:18px;color:#5b6362}
+.ati-utility{margin:17px 0 33px!important}
+.ati-utility h2{font-size:16px;font-weight:400;color:#555}
+.ati-tabs{gap:7px!important;margin-bottom:15px!important}
+.ati-tabs>*{font-family:Arial,sans-serif;font-size:12px!important;padding:10px 14px!important;border:1px solid #bfb9b6!important;background:#fff}
+.ati-tabs strong{border:0!important;border-bottom:2px solid #858b8b!important;box-shadow:none!important;color:#465456}
+.ati-filter{gap:10px!important;justify-content:space-between!important}
+.ati-filter label{font-size:12px;gap:10px}
+.ati-main select{height:31px;border:1px solid #aaa29d;background:white;font-size:12px}
+.ati-filter select{min-width:130px!important}
+.ati-add{font-size:12px;border:1px solid #b9aca7;color:#595959;padding:8px 13px}
+.ati-check{margin:20px 0 13px;font-size:11px!important}
+.ati-notice{background:#fff;border:1px solid #a7a2a0;padding:11px;font-size:11px!important;line-height:1.35}
+.ati-desc{margin:13px 0 14px!important;font-size:11px!important}
+.ati-cards{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:11px 13px!important;margin:0 5px!important}
+.ati-card{border:1px solid #cbc6c6!important;background:#fff!important;box-shadow:none!important;min-height:184px!important;padding:0 8px 8px!important;position:relative}
+.ati-kind{background:#d9bfd0!important;color:#625665!important;font-size:10px!important;font-weight:400!important;display:block!important;align-self:flex-start!important;margin:0 0 0 -8px!important;padding:4px 10px 4px 9px!important;clip-path:polygon(0 0,100% 0,100% 100%,5px 100%);line-height:1.1!important}
+.ati-kind span{position:absolute;right:-18px;top:2px;font-size:10px;color:#6b6b6b}
+.ati-card p{color:#4b4b4b!important;font-family:Arial,sans-serif;font-size:11px!important;font-weight:400!important;line-height:1.38!important;margin:9px 1px 10px!important;flex:1}
+.ati-card button{height:29px!important;font-family:Arial,sans-serif;font-weight:600!important;font-size:11px!important;background:#2b7d88!important;color:white;border:0!important;cursor:pointer}
+.ati-card button:hover{background:#226975!important}
+.ati-card button[disabled]{background:#e9e4e2!important;color:#a6a2a1!important}
+.ati-card small{font-size:8px!important;color:#999!important;margin-top:5px!important}
+.ati-card em{font-size:9px!important}
+.ati-card.exam-card{border:1px solid #cbc6c6!important}
+.ati-card.exam-card .ati-kind{background:#d9bfd0!important}
+@media(min-width:950px){.ati-main{max-width:835px!important}}
+@media(max-width:700px){.ati-main{width:100%;padding:0 12px!important}.ati-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ati-tabs{overflow-x:auto}.ati-filter{flex-wrap:wrap}.ati-card{min-height:190px!important}}
+
+/* Final refinements transcribed from the supplied 1920 × 1080 screen recording. */
+html{scroll-behavior:auto}
+body{background:white}
+.ati-landing{background:#fff!important;color:#555!important;font-family:Arial,Helvetica,sans-serif!important;font-size:12px!important;line-height:1.4!important}
+.ati-line{height:6px!important;margin:0!important;background:#ce464b!important}
+.ati-upper{height:27px;background:#f6f6f6;text-align:right;padding:5px 6% 0 0;font-size:11px;color:#444;text-decoration:underline}
+.ati-logo{position:absolute;top:103px;left:22px;font-family:Georgia,serif;color:#777;font-size:37px;font-weight:normal;letter-spacing:-2px}
+.ati-logo-symbol{font-family:Georgia,serif;font-size:33px;color:#d46b73;display:inline-block;transform:rotate(-26deg);margin-right:-3px}
+.ati-nav{box-sizing:border-box;border-bottom:1px solid #abd0d3!important;max-width:none!important;height:67px!important;margin:0!important;padding:18px 0!important;gap:33px!important;background:#fff;font-size:14px!important}
+.ati-landing:has(.ati-nav) .ati-main{margin:0 auto 80px!important;max-width:860px!important;padding:0!important}
+.ati-main h1{box-sizing:border-box;font-family:Georgia,serif!important;color:#505050!important;font-size:28px!important;font-weight:400!important;background:#f6fafb!important;margin:0 -1px 0!important;padding:12px 3px 14px!important;height:57px}
+.ati-subnav{padding:16px 15px 26px!important;font-size:13px!important;color:#25838d!important;gap:60px!important;height:70px;align-items:center;box-sizing:border-box}
+.ati-subnav b{font-weight:700}
+.ati-utility{margin:16px 0 34px!important;min-height:42px!important}
+.ati-utility h2{font-size:16px!important;color:#343434!important}
+.ati-main select{height:35px!important;border:1px solid #999!important;border-radius:3px;background:#fff!important;font-size:12px!important}
+.ati-tabs{gap:7px!important;margin-bottom:16px!important}
+.ati-tabs>*{padding:10px 20px!important;font-size:12px!important;border:1px solid #9ed0d4!important;color:#666!important;background:#f9fbfb!important}
+.ati-tabs strong{background:#fff!important;border:0!important;border-bottom:2px solid #258b94!important;color:#20838b!important;font-weight:700!important}
+.ati-tabs>*:last-child{letter-spacing:1px;color:#16808a!important}
+.ati-filter{gap:15px!important;justify-content:space-between!important;font-size:12px!important}
+.ati-filter select{min-width:160px!important}
+.ati-add{border:1px solid #218995!important;color:#217f8c!important;font-weight:600!important;padding:8px 13px!important}
+.ati-check{margin:19px 0 12px 17px!important;font-size:11px!important}
+.ati-notice{max-width:710px!important;padding:11px 12px!important;font-size:11px!important;border:1px solid #d0d0d0!important;line-height:1.35!important}
+.ati-desc{margin:9px 0 19px 10px!important;font-size:11px!important}
+.ati-cards{width:700px!important;margin:0 0 0 16px!important;grid-template-columns:repeat(4,161px)!important;gap:10px 19px!important}
+.ati-card{min-height:215px!important;padding:0 10px 8px!important;border:1px solid #d9d9d9!important;box-shadow:0 1px 4px #00000012!important;}
+.ati-card:nth-child(3){background:#eaeaea!important}
+.ati-kind{align-self:flex-start!important;background:#dac7e5!important;color:#5c535d!important;margin:0 0 0 -10px!important;padding:4px 10px!important;display:block!important;position:relative!important;clip-path:none!important;font-family:Georgia,serif!important;font-size:11px!important;line-height:1!important;white-space:nowrap}
+.ati-kind span{position:absolute!important;left:calc(100% + 3px)!important;top:2px!important;font-size:11px!important;color:#777!important}
+.ati-card p{font-size:12px!important;line-height:1.38!important;margin:11px 0 7px!important;color:#555!important}
+.ati-card button{height:32px!important;background:#22848d!important;color:white!important;font-size:12px!important;font-weight:700!important}
+.ati-card small{margin-top:7px!important;font-size:9px!important;color:#888!important;font-style:italic}
+.ati-card button[disabled]{background:#d9d9d9!important;color:#aaa!important}
+.ati-card.exam-card{border:1px solid #d9d9d9!important}
+.ati-foot{font-size:10px!important;color:#888!important}
+@media(max-width:920px){.ati-main{padding:0 12px!important}.ati-logo{display:none}.ati-cards{width:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;margin:0!important;gap:12px!important}.ati-filter{flex-wrap:wrap!important}}
+@media(max-width:550px){.ati-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ati-tabs{overflow-x:auto!important}.ati-subnav{gap:18px!important}.ati-nav{gap:12px!important;font-size:11px!important;height:auto!important}.ati-card{min-height:205px!important}}
+
+
+/* October 21 actual 1912px ATI screenshot layout measurements */
+@media(min-width:1100px){
+.ati-landing:has(.ati-nav) .ati-main{width:1000px!important;max-width:1000px!important;margin:0 auto 80px!important;padding:0!important}
+.ati-main h1{padding-left:0!important;position:relative!important;isolation:isolate!important}
+.ati-main h1:before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc((1000px - 100vw)/2);width:100vw;background:#f7fbfc}
+.ati-subnav{width:1000px!important}
+.ati-utility{width:1000px!important}
+.ati-tabs{width:1000px!important}
+.ati-filter{width:1000px!important}
+.ati-cards{width:815px!important;grid-template-columns:repeat(4,188px)!important;gap:11px 20px!important;margin-left:16px!important}
+.ati-notice{max-width:none!important;width:828px!important;box-sizing:border-box!important}
+.ati-desc{margin-left:10px!important}
+}
+.ati-card{min-height:247px!important}
+.ati-kind{background:#e4d8ec!important;color:#4d4454!important;font-family:Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight:400!important;padding:5px 10px!important}
+.ati-card p{font-family:Arial,Helvetica,sans-serif!important;font-size:14px!important;line-height:1.34!important;color:#666!important;margin-top:12px!important}
+.ati-card button{height:38px!important;background:#137c89!important;font-size:13px!important}
+.ati-card small{font-size:9px!important}
+.ati-main h1{font-size:31px!important;color:#454545!important}
+.ati-tabs strong{border-bottom:2px solid #117d88!important}
+.ati-subnav{color:#087f8d!important}
+.ati-card:nth-child(3){background:#ebebeb!important}
+@media(max-width:1099px){.ati-landing:has(.ati-nav) .ati-main{width:calc(100% - 30px)!important;max-width:1000px!important}.ati-cards{width:100%!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;margin:0!important;gap:12px!important}}
+@media(max-width:620px){.ati-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ati-card{min-height:226px!important}}
+
+
+/* Final requested refinements: ATI teal, heading, native page scrolling */
+html,body{height:auto!important;min-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;scroll-behavior:smooth!important}
+#startOverlay{height:auto!important;min-height:120vh!important;overflow:visible!important}
+.ati-main h1{font-family:Georgia,'Times New Roman',serif!important;font-weight:400!important;font-size:30px!important;letter-spacing:0!important;line-height:1.2!important;color:#494949!important;text-align:left!important;padding:13px 0 15px!important;height:auto!important;min-height:60px!important}
+.ati-main h1:before{background:#f7fbfc!important}
+.ati-card button:not([disabled]){background:#137f8e!important;color:#fff!important;border:0!important;opacity:1!important}
+.ati-card button:not([disabled]):hover{background:#0f7382!important}
+.ati-card.exam-card #startBtn{background:#137f8e!important;color:#fff!important}
+.ati-card button[disabled]{opacity:1!important}
+.ati-card.exam-card{scroll-margin-top:28px!important}
+
+
+.ati-footer-links a{color:#737373;text-decoration:underline;}
+#attestationPage .att-rule{padding:18px 19px;} #attestationPage .att-rule li{margin:14px 0;} #attestationPage .att-divider{margin:25px 0;border:0;border-top:1px solid #ccc;} #attestationPage .required{color:#ad5963;}
+</style>
+
+<style id="gw-browser-fix">
+  html, body { overflow-y: auto !important; }
+  body { background: #eef0f4 !important; }
+  .gw-browser {
+    position: sticky; top: 0; z-index: 9999; background: #dfe9f8;
+    border-bottom: 1px solid #cfd7e3; box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .gw-tabs { display:flex; align-items:end; gap:8px; padding:6px 10px 0 10px; min-height:38px; }
+  .gw-tab {
+    background:#fff; border:1px solid #c7cfdb; border-bottom:none; border-top-left-radius:10px; border-top-right-radius:10px;
+    padding:9px 16px 8px 16px; min-width:285px; max-width:320px; font-size:14px; color:#2f3133;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 1px 0 rgba(0,0,0,.03);
+  }
+  .gw-tab.inactive { background:#d8e6fb; border-bottom:1px solid #c7cfdb; min-width:180px; max-width:220px; }
+  .gw-tab .icon { display:inline-block; width:12px; height:12px; border:1px solid #8aa3c4; border-radius:2px; margin-right:8px; vertical-align:-1px; background:linear-gradient(#f3f7fd,#dce7f7); }
+  .gw-tab .x { float:right; color:#444; margin-left:10px; }
+  .gw-address-row { display:flex; align-items:center; gap:8px; padding:8px 10px; background:#eef3fb; border-top:1px solid #d4dced; }
+  .gw-navbtn { font-size:18px; color:#5b6169; padding:0 4px; line-height:1; }
+  .gw-address { flex:1; background:#fff; border:1px solid #cdd5df; border-radius:18px; min-height:32px; display:flex; align-items:center; padding:0 14px; color:#2e3135; font-size:15px; overflow:hidden; }
+  .gw-lock { color:#6c7178; margin-right:10px; }
+  .gw-url-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gw-spacer-right { width:26px; }
+  button:not([disabled]) { background:#0b8499 !important; border-color:#0b8499 !important; color:#fff !important; }
+</style>
+
+
+<style id="gw-begin-force-blue">
+  button, input[type="button"], input[type="submit"], a[role="button"], .btn, .button {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+  button:not([disabled]),
+  input[type="button"]:not([disabled]),
+  input[type="submit"]:not([disabled]),
+  a[role="button"]:not([disabled]) {
+    background: #0b8499 !important;
+    background-color: #0b8499 !important;
+    border: 1px solid #0b8499 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
+  button:not([disabled]):hover,
+  input[type="button"]:not([disabled]):hover,
+  input[type="submit"]:not([disabled]):hover,
+  a[role="button"]:not([disabled]):hover {
+    background: #0b8499 !important;
+    background-color: #0b8499 !important;
+    border-color: #0b8499 !important;
+    color: #ffffff !important;
+  }
+  button[disabled],
+  input[disabled],
+  a[disabled] {
+    background: #e6e6e6 !important;
+    border: 1px solid #d8d8d8 !important;
+    color: #999 !important;
+  }
+</style>
+
+
+<style id="gw-module-begin-blue-final">
+  .ati-card button:not([disabled]),
+  .module button:not([disabled]),
+  .assessment-card button:not([disabled]),
+  .card button:not([disabled]) {
+    box-shadow: none !important;
+  }
+  button.gw-force-begin-blue,
+  .gw-force-begin-blue,
+  a.gw-force-begin-blue,
+  input.gw-force-begin-blue {
+    background: #0b8499 !important;
+    background-color: #0b8499 !important;
+    border: 1px solid #0b8499 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+  }
+  button.gw-force-begin-blue:hover,
+  .gw-force-begin-blue:hover {
+    background: #0b8499 !important;
+    background-color: #0b8499 !important;
+    border-color: #0b8499 !important;
+    color: #ffffff !important;
+  }
+</style>
+
+<style id="all-module-buttons-ati-blue">
+/* Disabled reference-module controls remain nonfunctional, but visually match active blue controls. */
+.ati-landing .ati-cards .ati-card button,
+.ati-landing .ati-cards .ati-card button:disabled,
+.ati-landing .ati-cards .ati-card button[disabled],
+.ati-landing .ati-cards .ati-card button:hover,
+.ati-landing .ati-cards .ati-card button:disabled:hover {
+  background: #137f8e !important;
+  background-color: #137f8e !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+.ati-landing .ati-cards .ati-card button[disabled] {cursor:default !important;}
+</style>
+<style>
+#attestationPage{display:none;background:#fff;color:#555;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;min-height:100vh;overflow:visible;padding:0 0 90px;}
+#attestationPage .att-header{display:flex;align-items:center;justify-content:center;position:relative;padding:18px 20px;border-bottom:1px solid #eee}
+#attestationPage h1{font-size:17px;color:#a34b60;margin:0;font-weight:700}
+#attestationPage h2{font-size:15px;color:#a34b60;margin:35px 0 20px}
+#attestationPage .att-body{max-width:760px;margin:0 auto;padding:10px 26px 65px}
+#attestationPage p{margin:15px 0;line-height:1.48;}
+#attestationPage .att-rule{border:1px solid #ccc;padding:14px;margin-top:18px}
+#attestationPage ol,#attestationPage ul{padding-left:22px}
+#attestationPage li{margin:9px 0;line-height:1.45}
+#attestationPage label{font-size:11px;display:block;margin-top:16px}
+#attestationPage input[type=text]{width:190px;padding:8px;border:1px solid #9eb8c9;border-radius:3px;font-size:12px;background:white;color:#333}
+#attestationPage input.initials{width:70px}
+#attestationPage .att-actions{padding:24px 0;display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+#attestationPage .att-btn{background:#147e8e!important;color:white!important;border:0!important;padding:10px 22px;cursor:pointer}
+#attestationPage .att-btn:disabled{opacity:.55!important;cursor:not-allowed}
+#attestationPage .att-exit{position:absolute;right:20px;top:13px;background:#a7d5df!important;border:0!important;color:#30515a!important;padding:8px 12px;font-size:10px}
+#attestationPage .att-warning{font-size:11px;color:#b35562}
+#attestationPage .att-check{display:flex;align-items:center;gap:9px;margin-top:20px}
+#attestationPage .att-check input{flex:none}
+#attestationPage .att-check label{margin:0;font-size:12px}
+@media(max-width:740px){#attestationPage .att-body{padding:10px 20px 55px}#attestationPage .att-exit{position:static;margin-left:auto}#attestationPage .att-header{justify-content:space-between}}
+</style>
+<style id="att-bottom-accurate">
+#attestationPage .att-final-intro{border-top:1px solid #bbb;margin:28px 0 25px;padding-top:20px;font-size:11px;line-height:1.4}
+#attestationPage .att-lastname{margin-bottom:32px}
+#attestationPage .att-lastname label{font-size:10px;color:#555;font-weight:600;margin:0 0 3px}
+#attestationPage .att-lastname span{color:#b35c69}
+#attestationPage .att-lastname input{width:130px;padding:5px 7px;font-size:11px}
+#attestationPage .att-agree-strip{display:grid;grid-template-columns:145px 1fr;min-height:48px;background:#e1e1e1;align-items:stretch;margin:6px 0 40px;font-size:10px;color:#777}
+#attestationPage .att-agree-label{display:flex;align-items:center;justify-content:center;gap:10px;margin:0;border-right:1px solid white;cursor:pointer}
+#attestationPage .att-agree-label input{width:18px;height:18px;accent-color:#7595a7}
+#attestationPage .att-agree-detail{align-self:center;padding:8px 24px;text-align:center;line-height:1.35}
+#attestationPage .att-start-area{text-align:center;color:#777;font-size:10px;margin:22px auto 30px}
+#attestationPage .att-start-area p{margin:7px 0;font-size:10px}
+#attestationPage .att-start-area .att-examlabel{font-weight:600;color:#666}
+#attestationPage button.att-start-btn{background:#a9d6df!important;border:0!important;color:#4d6c74!important;font-size:10px!important;font-weight:600!important;padding:8px 12px!important;margin:10px auto 0!important;display:inline-block!important;width:auto!important;min-width:90px!important;cursor:pointer}
+#attestationPage .att-bottom-notice{display:flex;align-items:flex-start;gap:12px;padding:0 10px 12px;color:#ba6675;font-size:10px}
+#attestationPage .att-bottom-notice strong{font-weight:600}
+#attestationPage .att-bottom-notice p{margin:3px 0 0;color:#777;font-size:9px;line-height:1.35}
+#attestationPage .att-symbol{font-size:31px;line-height:30px;color:#be6576}
+#attestationPage .att-copyline{border-top:1px solid #c7c7c7;padding:8px 0;text-align:center;font-size:9px;color:#888}
+@media(max-width:560px){#attestationPage .att-agree-strip{grid-template-columns:100px 1fr}#attestationPage .att-agree-detail{padding:8px 12px}}
+</style>
+
+<style id="exam-image-refinement">
+#app{background:#fff!important;border-top:5px solid #bb4652!important;font-family:Arial,Helvetica,sans-serif!important}
+#app .topbar{padding:12px max(36px,11vw)!important;background:#fff!important;border-bottom:0!important;gap:14px!important}
+#app .brand{font-size:27px!important;color:#858585!important;min-width:64px!important}
+#app .brandMark{width:29px!important;height:29px!important}
+#app .quizName{font-size:14px!important;font-weight:400!important;color:#333!important}
+#app .stripe{height:14px!important;opacity:.42!important}
+#app .exam{min-height:calc(100vh - 120px)!important;max-width:1200px!important;width:100%!important;margin:0 auto!important;padding:24px 24px 18px!important}
+#app .status{align-items:flex-start!important;border:0!important;padding:0 0 0 0!important}
+#app .qcount{font-size:23px!important;font-weight:500!important;color:#555!important}
+#app .clockArea{font-size:11px!important;gap:9px!important}
+#app .clockLines{line-height:1.3!important}
+#app .pauseBtn{font-weight:500!important;min-height:36px!important;font-size:11px!important;padding:8px 10px!important;background:#ededed!important;color:#777!important;border:0!important;border-radius:0!important}
+#app .calculatorGlyph{font-size:29px;color:#747878;line-height:1.2}
+#app .questionArea{flex:0 0 auto!important;padding:56px 3px 0!important}
+#app .stem{font-size:13px!important;color:#666!important;line-height:1.6!important;max-width:100%!important;margin:0 0 8px!important}
+#app .progressDots{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #ccc;padding-top:10px;margin:0 0 14px;gap:4px}
+#app .progressDot{width:5px;height:5px;background:#bcc1c4;border-radius:50%;flex:none}
+#app .progressDot.completed{background:#778d9b}
+#app .options{gap:3px!important;max-width:100%!important}
+#app .option{min-height:33px!important;padding:5px 8px!important;gap:10px!important;border-radius:0!important}
+#app .option input{height:16px!important;width:16px!important;border-width:1.4px!important;margin-top:1px!important}
+#app .option input:checked:after{height:7px!important;width:7px!important;top:3px!important;left:3px!important}
+#app .optionText{font-size:12px!important;line-height:1.6!important;color:#5b5b5b}
+#app .navrow{margin-top:9px!important;padding:0!important;border:0!important}
+#app .navBtn{background:#ededed!important;border:0!important;color:#666!important;border-radius:0!important;font-size:12px!important;min-height:37px!important;padding:8px 19px!important;font-weight:500!important}
+#app .navBtn:disabled{opacity:.6}
+#app .footerNote{margin-top:58px!important;font-size:10px!important;padding-top:12px!important;border-top:1px solid #bbb!important;max-width:100%!important}
+
+@media(max-width:700px){#app .topbar{padding:11px 14px!important}#app .exam{padding:19px 12px!important}#app .questionArea{padding-top:34px!important}#app .clockArea{gap:4px!important}#app .qcount{font-size:17px!important}#app .progressDot{width:3px;height:3px}#app .progressDots{gap:2px}}
+</style>
+<style id="gw-psych-exam-tweak">
+#app .exam{max-width:1360px!important;margin:0 auto!important;padding:18px 34px 18px 150px!important;min-height:calc(100vh - 118px)!important}
+#app .status,#app .questionArea,#app .navrow,#app .footerNote{max-width:920px!important;width:920px!important;margin-left:0!important;margin-right:0!important}
+#app .status{align-items:flex-start!important;padding-top:8px!important}
+#app .qcount{font-size:19px!important;font-weight:600!important;color:#4f4f4f!important}
+#app .clockArea{font-size:11px!important;gap:8px!important;color:#666!important}
+#app .pauseBtn{min-height:30px!important;height:30px!important;padding:4px 10px!important;background:#e9e6df!important;border:1px solid #d7d2cb!important;color:#6a6a6a!important;font-size:11px!important;font-weight:600!important}
+#app .questionArea{padding:34px 0 0!important;flex:0 0 auto!important}
+#app .stem{font-size:12.5px!important;line-height:1.55!important;color:#5c5c5c!important;max-width:860px!important;margin:0 0 9px!important}
+#app .progressDots{padding-top:9px!important;margin:0 0 16px!important;gap:4px!important;border-top:0!important}
+#app .progressDot{width:4px!important;height:4px!important;background:#bfc4c8!important}
+#app .progressDot.completed{background:#8e9daa!important}
+#app .options{max-width:760px!important;gap:7px!important}
+#app .option{min-height:28px!important;padding:4px 4px!important;gap:10px!important;background:transparent!important;border:none!important}
+#app .option:hover{background:transparent!important}
+#app .option.selected{background:transparent!important;border:none!important}
+#app .option input{width:18px!important;height:18px!important;border:1.5px solid #8e8e8e!important;margin-top:2px!important}
+#app .option input:checked:after{width:8px!important;height:8px!important;top:3.5px!important;left:3.5px!important;background:#6f7881!important}
+#app .optionText{font-size:12.5px!important;line-height:1.45!important;color:#5a5a5a!important}
+#app .navrow{justify-content:flex-end!important;padding:8px 0 0!important;margin-top:12px!important}
+#app .navBtn{min-height:30px!important;height:30px!important;padding:0 0 0 14px!important;width:94px!important;border:0!important;border-radius:0!important;background:#e6e3dc!important;color:#6c6c6c!important;font-size:11px!important;font-weight:700!important;position:relative!important;text-align:left!important;letter-spacing:.2px!important}
+#app .navBtn::after{content:'';position:absolute;right:-15px;top:0;border-top:15px solid transparent;border-bottom:15px solid transparent;border-left:15px solid #e6e3dc}
+#app #backBtn{width:72px!important;padding-left:12px!important}
+#app #backBtn::after{border-left-color:#e6e3dc!important}
+#app .footerNote{margin-top:54px!important;padding-top:12px!important;font-size:9.5px!important;color:#6a6a6a!important}
+#app .footerNote::after{content:'Copyright © 2026 Assessment Technologies Institute, L.L.C. All rights reserved.';display:block;text-align:center;flex:1;font-size:9px;color:#7d7d7d}
+@media(max-width:1200px){#app .exam{padding-left:70px!important}#app .status,#app .questionArea,#app .navrow,#app .footerNote{max-width:760px!important;width:760px!important}}
+@media(max-width:860px){#app .exam{padding:16px 16px 16px 16px!important}#app .status,#app .questionArea,#app .navrow,#app .footerNote{width:100%!important;max-width:100%!important}#app .navBtn{width:84px!important}#app .navBtn::after{display:none}}
+</style>
+
+<style id="final-ati-layout">
+#app {background:#fff!important;border-top:5px solid #bb434b!important;color:#525252!important}
+#app .topbar{padding:12px 24px 11px!important;background:#f5f5f3!important;border-bottom:0!important}
+#app .brand{font-size:28px!important}
+#app .quizName{font-size:13px!important;font-weight:400!important;color:#515151!important}
+#app .stripe{height:11px!important;opacity:.30!important}
+#app .exam{max-width:1160px!important;padding:18px 18px 18px 24px!important;margin:0 auto!important}
+#app .status,#app .questionArea,#app .navrow,#app .footerNote{max-width:900px!important;width:100%!important}
+#app .qcount{display:none!important}
+#app .status{justify-content:flex-end!important;padding:0!important}
+#app .clockArea{font-size:10px!important;gap:8px!important;color:#707070!important}
+#app .clockLines{line-height:1.38!important}
+#app .clockLines strong{font-weight:400!important}
+#app .pauseBtn{height:31px!important;min-height:31px!important;background:#e8e5df!important;color:#656565!important;border:1px solid #ddd8d2!important;font-size:10px!important;padding:3px 11px!important}
+#app #calcToggle.calculatorGlyph{font-size:24px!important;height:34px!important;min-width:30px!important;padding:0!important;line-height:1!important;background:#278ba3!important;color:white!important;border:1px solid #227e95!important;border-radius:2px!important;cursor:pointer}
+#app .questionArea{padding:38px 0 0!important;min-height:0!important}
+#app .stem{font-size:12px!important;line-height:1.5!important;color:#565656!important;max-width:900px!important;margin:0 0 11px!important}
+#app .progressDots{width:100%!important;display:flex!important;justify-content:space-between!important;gap:3px!important;padding:0!important;margin:9px 0 15px!important;border:0!important}
+#app .progressDot{width:4px!important;height:4px!important;background:#bfc5c7!important;flex:0 0 4px!important}
+#app .progressDot.completed{background:#6d9caa!important}
+#app .options{gap:5px!important;max-width:800px!important}
+#app .option{padding:4px 3px!important;min-height:29px!important;gap:10px!important}
+#app .optionText{font-size:12px!important;line-height:1.5!important}
+#app .navrow{border:0!important;margin-top:7px!important;padding:0 12px 0 0!important;justify-content:flex-end!important}
+#app #continueBtn{background:#e7e4df!important;color:#666!important;border:0!important;width:88px!important;height:32px!important;min-height:32px!important;font-size:10px!important;padding:0 0 0 12px!important;text-align:left!important}
+#app #continueBtn:after{content:''!important;right:-13px!important;border-top:16px solid transparent!important;border-bottom:16px solid transparent!important;border-left:13px solid #e7e4df!important}
+#app .footerNote{margin-top:56px!important;color:#777!important;font-size:9px!important}
+.calc-panel{position:fixed;z-index:10010;top:130px;right:38px;width:240px;background:#f2f4f5;border:1px solid #a8b4bc;box-shadow:0 7px 25px #0003;padding:10px;color:#303c42;font-family:Arial,sans-serif}
+.calc-panel[hidden]{display:none!important}
+.calc-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:8px}
+.calc-head button{background:#dbe7ec;border:1px solid #b5c5cc;padding:0 7px;font-size:18px;cursor:pointer}
+#calcDisplay{width:100%;height:34px;border:1px solid #acb9bf;background:white;color:#20272a;text-align:right;padding:5px 8px;font:18px Arial;margin-bottom:8px}
+.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.calc-keys button{height:37px;background:#fff;border:1px solid #c1c9cb;cursor:pointer;color:#333;font:15px Arial}
+.calc-keys button:nth-child(4n){background:#d9eaf0}
+.calc-keys button:last-child{background:#278ba3;color:#fff}
+@media(max-width:700px){#app .exam{padding:18px 14px!important}#app .questionArea{padding-top:24px!important}.calc-panel{right:12px;top:100px}}
+</style><style id="fullscreen-exam-only">
+ body.exam-taking .gw-browser { display:none !important; }
+ body.exam-taking #startOverlay, body.exam-taking #attestationPage { display:none !important; }
+ body.exam-taking { background:#fff !important; }
+</style>
+<style id="exam-final-tune">
+#app .topbar{padding:10px 23px 10px!important;background:#f7f7f6!important}
+#app .brand{min-width:90px!important;gap:3px!important;color:#777!important;font-family:Georgia,serif!important;font-weight:400!important;font-size:30px!important}
+#app .brandMark{border:1.6px solid #be6468!important;transform:rotate(-28deg) scale(.77)!important;opacity:.9!important;margin-right:-5px!important}
+#app .quizName{font-family:Arial,sans-serif!important;font-size:12.5px!important}
+#app #calcToggle.calculatorGlyph{border:0!important;background:transparent!important;min-width:30px!important;height:36px!important;padding:2px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+#app .questionArea{padding-top:35px!important}
+#app .stem{font-family:Arial,sans-serif!important;font-size:12px!important;line-height:1.48!important;font-weight:400!important;max-width:895px!important}
+#app .optionText{font-size:12px!important;font-weight:400!important;line-height:1.5!important}
+#app .footerNote{display:flex!important;align-items:flex-start!important;gap:8px!important;border-top:1px solid #bababa!important;padding:11px 1px 0!important;margin-top:63px!important;color:#626262!important;font-style:italic!important;font-size:9px!important;line-height:1.3!important}
+#app .footerNote .tinyMark{color:#b06a70!important;font-size:24px!important;font-style:normal!important;line-height:1!important}
+
+.calc-panel{border:1px solid #8d989d!important;background:#f1f3f3!important;border-radius:1px!important}
+.calc-head{background:#e2e8ea!important}
+</style>
+<style id="completion-match-style">
+#examCompleteDialog{display:none;position:fixed;inset:0;z-index:12000;align-items:flex-start;justify-content:center;padding-top:145px;background:rgba(255,255,255,.02);font-family:Arial,Helvetica,sans-serif}
+#examCompleteDialog .completeBox{background:white;width:285px;border:1px solid #d0d0d0;box-shadow:0 5px 18px #9998;padding:13px 14px 16px;text-align:left}
+#examCompleteDialog h2{margin:0 0 11px;color:#bd6471;font-family:Georgia,'Times New Roman',serif;font-weight:600;font-size:18px}
+#examCompleteDialog p{font-size:11px;margin:0 0 8px;color:#666}
+#examCompleteDialog button{background:#f4e46b!important;color:#505050!important;border:0!important;min-height:29px;width:100%;font-size:10px;font-weight:600;cursor:pointer}
+#completedWait{display:none;min-height:100vh;background:#fff;position:relative;font-family:Georgia,'Times New Roman',serif;color:#777;text-align:center}
+#completedWait .waitBrand{position:absolute;top:26px;left:max(24px,calc(50% - 350px));font-family:Arial,sans-serif;font-size:18px;color:#9a9a9a}
+#completedWait .waitClose{position:absolute;top:27px;right:max(24px,calc(50% - 350px));font-family:Arial,sans-serif;border:0;background:transparent;color:#777;font-size:10px}
+#completedWait .waitCenter{padding:165px 20px 0}
+#completedWait h2{font-family:Georgia,'Times New Roman',serif;font-size:17px;font-weight:400;margin:0 0 12px;color:#6f7780}
+#completedWait .bars{display:flex;justify-content:center;gap:2px;margin:0 auto 26px}
+#completedWait .bars span{width:9px;height:5px;background:#9db2c3}
+#completedWait .bars span:nth-child(5){background:#e8bb72}
+#completedWait p{font-size:11px;margin:0 0 24px;color:#777}
+#completedWait .waitTile{width:116px;height:122px;background:#fff;border:1px solid #ecebe6;border-radius:26px;box-shadow:0 2px 15px #e6e6de;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:#aaa}
+#completedWait .spinner{width:21px;height:34px;border:4px solid transparent;border-top-color:#e6a65b;border-right-color:#e6a65b;border-radius:50%;animation:waitspin 1.4s linear infinite;margin-bottom:7px}
+#completedWait #viewPracticeReview{display:none;margin:30px auto;border:1px solid #9eb0bb;background:#f1f3f4;color:#5b6670;padding:9px 18px;cursor:pointer;font-size:12px}
+@keyframes waitspin{to{transform:rotate(360deg)}}
+@media(max-width:600px){#examCompleteDialog{padding-top:105px}#completedWait .waitCenter{padding-top:135px}}
+</style>
+
+<style id="polished-finish-views">
+#completedWait {min-height:100vh!important;background:#fff!important;position:relative!important;color:#777!important;border-top:2px solid #e9e9e9!important}
+#completedWait .waitBrand{top:17px!important;left:max(30px,calc(50% - 365px))!important;color:#b5a0a0!important;font-size:17px!important}
+#completedWait .waitClose{top:18px!important;right:max(30px,calc(50% - 365px))!important;font-size:9px!important}
+#completedWait .waitCenter {padding:0 20px!important;position:absolute!important;top:40%!important;left:50%!important;transform:translate(-50%,-22%)!important;width:100%!important;max-width:740px!important}
+#completedWait h2{font-size:16px!important;letter-spacing:.1px!important;font-weight:400!important;margin:0 0 17px!important;color:#6d7680!important}
+#completedWait .bars{gap:2px!important;margin:0 auto 23px!important}
+#completedWait .bars span{width:12px!important;height:5px!important;background:#8fa7ba!important}
+#completedWait .bars span:nth-child(5){background:#f0cb86!important}
+#completedWait .waitCenter p{font-family:Georgia,'Times New Roman',serif!important;font-size:11px!important;color:#777!important;margin:0 0 26px!important}
+#completedWait .waitTile{height:122px!important;width:119px!important;border:1px solid #ece8db!important;border-radius:27px!important;box-shadow:0 0 0 4px #f7f7f0,0 7px 16px #e7e7e2!important;background:linear-gradient(#fff,#f9faf5)!important;gap:7px!important;font-family:Georgia,serif!important;color:#a6a7a4!important}
+#completedWait .waitEmblem{font-family:Georgia,serif;font-size:31px;color:#e5a85a;line-height:1;display:inline-block;animation:waitpulse 1.5s ease-in-out infinite}
+@keyframes waitpulse{0%,100%{opacity:.45;transform:scale(.9)}50%{opacity:1;transform:scale(1.08)}}
+#completedWait #viewPracticeReview{font-family:Arial,sans-serif!important;font-size:11px!important;margin:28px auto 0!important;padding:9px 18px!important;background:#e9e9e7!important;border:1px solid #b9bab7!important;color:#666!important}
+#resultView.result{display:none;position:fixed;inset:0;z-index:10010;align-items:center;justify-content:center;background:rgba(250,250,249,.88)!important;min-height:0!important;padding:20px!important;text-align:left!important}
+#resultView .resultsPopup{width:min(390px,94vw);background:#fff;border:1px solid #d6d6d2;box-shadow:0 5px 24px #0002;padding:22px 24px}
+#resultView .resultsPopup h2{font-family:Georgia,serif;font-size:20px;font-weight:500;color:#bd6571;margin:0 0 20px}
+#resultView .resultsPopup .score{font-size:14px;font-weight:500;color:#555;margin:4px 0 9px}
+#resultView .resultsPopup p{font-size:12px;color:#666}
+#resultView .resultActions{display:flex;gap:10px;margin-top:24px}
+#resultView .resultActions button{font-family:Arial,sans-serif;cursor:pointer;flex:1;min-height:33px;border:1px solid #aaa;background:#e8e8e6;color:#555;font-size:11px}
+#resultView .resultActions .restartBtn{margin:0;background:#e8df79!important;border-color:#d3c970!important;color:#555!important}
+</style>
+<style>#endBlankPage{display:none}#examCompleteDialog{padding-top:145px!important;background:transparent!important}#completedWait #viewPracticeReview{display:none!important}</style>
+<style id="old-quiz-results-matched">
+/* Match the results dialogs in the original hosted Quiz 2. */
+#examCompleteDialog { padding-top: 199px !important; background:rgba(218,220,220,.12) !important; }
+#examCompleteDialog .completeBox { width:min(490px,95vw) !important; background:#fff !important; border:1px solid #d5d5cf !important; box-shadow:0 10px 30px rgba(0,0,0,.18) !important; padding:22px 28px !important; text-align:left !important; }
+#examCompleteDialog h2 { margin:0 0 12px !important; font:700 26px/1.1 Arial,Helvetica,sans-serif !important; color:#d36f73 !important; }
+#examCompleteDialog p { margin:0 0 16px !important; color:#4f4f4b !important; font:600 15px Arial,Helvetica,sans-serif !important; }
+#examCompleteDialog #finalizeBtn { display:block !important; width:100% !important; min-height:56px !important; height:56px !important; border:1px solid #d5d15a !important; background:#dde55c !important; color:#525200 !important; font:700 15px Arial,Helvetica,sans-serif !important; border-radius:0 !important; }
+#resultView.result { align-items:flex-start!important; justify-content:center!important; padding:199px 12px 20px!important; background:rgba(218,220,220,.88)!important; }
+#resultView .resultsPopup { width:min(360px,95vw)!important; padding:22px 28px!important; background:#fff!important; border:1px solid #d5d5cf!important; box-shadow:0 10px 30px rgba(0,0,0,.18)!important; }
+#resultView .resultsPopup h2 { color:#d36f73!important; font:700 26px/1.1 Arial,Helvetica,sans-serif!important; margin:0 0 12px!important; }
+#resultView .resultsPopup .score, #resultView .resultsPopup p { color:#4f4f4b!important; font:600 15px Arial,Helvetica,sans-serif!important; }
+#resultView .resultActions { display:grid!important; gap:12px!important; margin-top:16px!important; }
+#resultView .resultActions button { height:56px!important; min-height:56px!important; border:2px solid #c8dde8!important; background:#fff!important; color:#5b5b57!important; font:600 15px Arial,Helvetica,sans-serif!important; }
+#resultView .resultActions .restartBtn { background:#dde55c!important; border:1px solid #d5d15a!important; color:#525200!important; font-weight:700!important; }
+@media(max-width:600px){#examCompleteDialog{padding-top:90px!important}#resultView.result{padding-top:90px!important}#examCompleteDialog h2,#resultView .resultsPopup h2{font-size:22px!important}}
+</style>
+
+<style id="centered-compact-results-v2">
+/* Keep both end-of-exam dialogs compact and anchored to the horizontal center. */
+#examCompleteDialog{
+  position:fixed!important; inset:0!important;
+  padding:76px 12px 20px!important;
+  display:none; align-items:flex-start!important; justify-content:center!important;
+}
+#examCompleteDialog .completeBox{
+  position:relative!important; left:auto!important; right:auto!important;
+  transform:none!important; margin:0 auto!important;
+  width:min(310px,calc(100vw - 32px))!important;
+  padding:12px 15px 15px!important;
+}
+#examCompleteDialog h2{font-size:17px!important;margin-bottom:8px!important}
+#examCompleteDialog p{font-size:11px!important;margin-bottom:11px!important;font-weight:500!important}
+#examCompleteDialog #finalizeBtn{
+  min-height:30px!important;height:30px!important;font-size:10px!important;
+}
+#resultView.result{
+  padding:76px 12px 20px!important;
+  align-items:flex-start!important;justify-content:center!important;
+}
+#resultView .resultsPopup{
+  position:relative!important;left:auto!important;transform:none!important;
+  margin:0 auto!important;width:min(310px,calc(100vw - 32px))!important;
+  padding:14px 17px!important;
+}
+#resultView .resultsPopup h2{font-size:17px!important}
+#resultView .resultsPopup .score,#resultView .resultsPopup p{font-size:11px!important}
+#resultView .resultActions{gap:7px!important;margin-top:11px!important}
+#resultView .resultActions button{height:31px!important;min-height:31px!important;font-size:11px!important}
+</style>
+</head>
+<body>
+
+<div class="gw-browser" aria-hidden="true">
+  <div class="gw-tabs">
+    <div class="gw-tab"><span class="icon"></span>Learn - Study Materials - My ATI <span class="x">×</span></div>
+    <div class="gw-tab inactive"><span class="icon"></span>New Tab</div>
+  </div>
+  <div class="gw-address-row">
+    <span class="gw-navbtn">←</span>
+    <span class="gw-navbtn">→</span>
+    <span class="gw-navbtn">↻</span>
+    <div class="gw-address"><span class="gw-lock">ⓘ</span><span class="gw-url-text">student.atitesting.com/Products</span></div>
+    <div class="gw-spacer-right"></div>
+  </div>
+</div>
+
+
+<div id="startOverlay" class="ati-landing">
+  <div class="ati-line"></div><div class="ati-upper"><span>Online Store</span> &nbsp; <span>Contact Us</span> &nbsp; <span>Sign Out</span></div><div class="ati-logo"><span class="ati-logo-symbol">✣</span>ati.</div>
+  <nav class="ati-nav"><span>⌂ Home</span><span>♟ My ATI</span><span>♙ Results</span><span>⚙ Profile</span><span>⊗ Help</span></nav>
+  <main class="ati-main">
+    <h1>My ATI</h1>
+    <div class="ati-subnav"><b>▣ &nbsp; Study Materials</b><span>Active Learning Templates</span></div>
+    <div class="ati-utility"><h2>Study Materials</h2><label>Content Area: <select><option>All</option></select></label></div>
+    <div class="ati-tabs"><span>Learn</span><strong>Assessments</strong><span>NCLEX Prep</span><span>Flashcards Hub</span><span>Remote Testing Guides &amp; Resources</span></div>
+    <div class="ati-filter"><label>View <select><option>All</option></select></label><label>Type <select><option>All</option></select></label><label>Sort <select><option>Date Accessed</option></select></label><button class="ati-add">＋ Add a Product</button></div>
+    <p class="ati-check">☑ &nbsp; Hide disabled products (83 hidden)</p>
+    <div class="ati-notice">Note: There are currently no proctored exams in session. When a proctored exam is in session, it will display here. <span>◉ Check for Proctors</span></div>
+    <p class="ati-desc">Other available assessments: <a href="#practice-exam" style="color:#137f8e;float:right;font-size:11px;text-decoration:underline">Jump to NUR 131 practice exam ↓</a></p>
+    <div class="ati-cards">
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>Remote Proctoring Dry Run</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>Custom: Nur 131 Fall 2026 Midterm Practice</p><button type="button" disabled title="Visual reference only">Continue</button><small>Accessed: 10/21/2026</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>Custom: Nur 131 Fall 2026 Quiz 2a</p><em>Disabled by Instructor.</em><button disabled>Retake</button><small>Results (1)</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Leadership Online Practice 2026 A</p><button type="button" disabled title="Visual reference only">Continue</button><small>Accessed: 10/13/2026</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Targeted Medical Surgical Endocrine Online Practice 2026</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Targeted Medical Surgical Perioperative Online Practice 2026</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Targeted Medical Surgical Cardiovascular Online Practice 2026</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Targeted Medical Surgical Gastrointestinal Online Practice 2026</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Targeted Medical Surgical Neurosensory and Musculoskeletal Online Practice 2026</p><button type="button" disabled title="Visual reference only">Continue</button><small>Accessed: 10/13/2026</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Adult Medical Surgical Online Practice 2026 A</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Mental Health Online Practice 2026 B</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Practice Assessment <span>ⓘ</span></div><p>RN Pharmacology Online Practice 2026 B</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Quiz Bank <span>ⓘ</span></div><p>Dynamic Quizzing Learning System RN 3.0</p><button type="button" disabled title="Visual reference only">Quizzes</button><small>Accessed: Never</small></div>
+      <div class="ati-card exam-card" id="practice-exam"><div class="ati-kind">Proctored Assessment <span>ⓘ</span></div><p>Custom: NUR 131 Mental Health Quiz #2</p><button id="startBtn" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Proctored Assessment <span>ⓘ</span></div><p>Custom: NUR 131 Exam 1 Practice</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Proctored Assessment <span>ⓘ</span></div><p>Custom: NUR 131 Quiz #2 Psych</p><button type="button" disabled title="Visual reference only" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+      <div class="ati-card"><div class="ati-kind">Proctored Assessment <span>ⓘ</span></div><p>Custom: Nur 131 Fall 2026 Midterm</p><button type="button" id="midtermBegin" style="background:#0b8499 !important; background-color:#0b8499 !important; border:1px solid #0b8499 !important; color:#fff !important; opacity:1 !important;" class="gw-force-begin-blue">Begin</button><small>Accessed: Never</small></div>
+    </div>
+    <div class="ati-foot" style="text-align:center;line-height:1.8">
+      <div>Copyright © 2026 Assessment Technologies Institute, L.L.C. All rights reserved.</div>
+      <div class="ati-footer-links">
+        <a href="https://auth.atitesting.com/policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        <span> | </span><a href="https://auth.atitesting.com/terms.html" target="_blank" rel="noopener noreferrer">Terms and Conditions</a>
+        <span> | </span><a href="https://www.atitesting.com/ca-privacy-notice" target="_blank" rel="noopener noreferrer">California Residents Privacy Notice</a>
+        <span> | </span><a href="https://www.atitesting.com/data-privacy-request" target="_blank" rel="noopener noreferrer">Data Privacy Request</a>
+        <span> | </span><a href="https://www.atitesting.com/solutions" target="_blank" rel="noopener noreferrer">ATI Product Solutions</a>
+      </div>
+      <div style="margin-top:6px;color:#777">Independent practice simulation — not affiliated with ATI.</div>
+    </div>
+  </main>
+</div>
+
+<section id="attestationPage" aria-label="training exam attestation">
+<div class="att-header"><h1>Examinee Attestation</h1><button class="att-exit" id="attExit" type="button">END ASSESSMENT</button></div>
+<div class="att-body">
+<h2>Carefully read the following terms and conditions of this attestation (the “Attestation”).</h2>
+<p>This independent NUR 131 training assessment is intended for personal study and preparation for a nursing examination. It is not an official ATI examination and is not connected to an institution's proctoring or assessment system.</p>
+<p>This training assessment and its question material are for your own use. During your simulation attempt, work independently and do not copy, distribute, or share any questions with others.</p>
+<p>The terms of this simulation attestation supplement the instructions that will appear when your assessment begins.</p>
+<p>Indicate your understanding, acknowledgment, and agreement where indicated in the boxes below:</p>
+<p>Enter your full name as listed on your training account to certify and represent that you are the person taking this assessment, that you will not permit any other person to complete your test, and that you will not represent someone else's knowledge as your own, including the use of artificial intelligence (AI), and that you have not used any advertised in any way as actual assessment questions to help you prepare.</p>
+<label for="attName">Full Name <span class="required">*</span></label><input type="text" id="attName" placeholder="Enter full name" autocomplete="name"/>
+<p>All training assessment content is provided for your personal, non-commercial use in connection with preparation for enrollment or participation in a nursing, general healthcare, or allied health program.</p>
+<p>You are not permitted to use the content to make money for your personal commercial benefit, on behalf of others, or as a part of any test prep service or material, or for any other business purposes. During the Assessment, you are prohibited from:</p>
+<ul><li>engaging third parties from taking the Assessment on your behalf (proxy test taking or contract cheating);</li><li>disclosing information, written or spoken, about content that is on the Assessment;</li><li>enabling remote access or screen sharing software during your Assessment;</li><li>using “smart” glasses or use of or engagement with any technology or third party that may be used in furtherance of circumventing the statements and spirit of promoting exam integrity as noted in this Attestation.</li></ul>
+<p>Violations of this attestation may lead to your decision to restart the assessment. This training tool does not suspend accounts, report violations, or administer penalties.</p>
+<p>Enter your initials to indicate you have read, consent to, acknowledged, and agree with the above statement(s):</p>
+<label for="attInitial1">Initials <span class="required">*</span></label><input type="text" id="attInitial1" class="initials" maxlength="6"/>
+<p>You understand and agree that by engaging in the Assessments, you have an affirmative duty to report any known or reasonably known violations of this attestation or the Terms. Violations include but are not limited to the actual or attempted sale and/or purchase of proprietary materials, acquiring Assessment content prior to the Assessment, the use of proxy examinees for Assessments, and the use of any technology that may be used in furtherance of violating this Attestation.</p>
+<p>Violations should be addressed by discussing any concerns about an official assessment with your instructor or authorized testing provider.</p>
+<p>Enter your initials to indicate you have read, consent to, acknowledged, and agree with the above statement(s):</p>
+<label for="attInitial2">Initials <span class="required">*</span></label><input type="text" id="attInitial2" class="initials" maxlength="6"/>
+<p>You understand and agree that results of this training assessment are not official scores and that your school or testing provider will not receive your responses. The results are only to help you identify topics that require further study.</p>
+<p>It is a good faith and reasonable basis to question the validity of the results or to reasonably suspect that your simulation was not completed independently if outside answers or prohibited aids are used during this attempt.</p>
+<p>Enter your initials to indicate you have read, consent to, acknowledged, and agree with the above statement(s):</p>
+<label for="attInitial3">Initials <span class="required">*</span></label><input type="text" id="attInitial3" class="initials" maxlength="6"/>
+<div class="att-rule"><strong>Additionally:</strong>
+<ol>
+<li>You are not allowed to eat, drink, or have access to any notes, personal items, or electronic devices (including headphones, or any technology that may be used in furtherance of circumventing this Attestation of any kind) during the Assessment without prior written authorization by ATI. <em>For this training exam, you may adjust these conditions to match your study needs.</em></li>
+<li>You are authorized to interact only with the training assessment interface during your assessment; you are not allowed to interact with any other person in any way during the training session.</li>
+<li>The simulation is not monitored. No real examination proctor or institutional administrator can invalidate, supervise, or approve your training session.</li>
+<li><strong>simulation break:</strong> You may take a timed optional break if the simulator offers one. During the break, you may not access any notes, electronic devices, or study materials and must refrain from all communication with others.</li>
+<li><strong>Remote Proctoring:</strong>
+<ol type="a" class="remote-details">
+<li><strong>a)</strong> In an officially supervised assessment, a school or testing provider may require remote examination services to protect the integrity of the test. Such services can involve a proctor or automated systems observing activity through a camera, microphone, browser, or screen, and may include identity verification and checks of the testing environment and computer setup. This independent NUR 131 simulator does not perform any of those monitoring or recording functions; this paragraph describes the kinds of conditions you may encounter during a real examination.</li>
+<li><strong>b)</strong> Officially proctored exams may expect students to remain visible on camera and within the assessment screen throughout the session, except during authorized breaks. Students may also need to finish required preparation steps, such as an ID confirmation, workspace scan, equipment check, or internet test before starting. Missing those steps can affect an official exam attempt under the provider's rules. In this simulation exercise, you can rehearse those habits, but leaving the screen or changing fullscreen mode will not invalidate any official assessment.</li>
+<li><strong>c)</strong> Information and recordings collected by an official remote proctoring service may be reviewed by designated testing or institutional personnel for exam-security purposes, subject to the applicable provider's privacy terms and consent process. This simulation page does not collect, store, send, or share webcam footage, microphone audio, screen recordings, or device information with ATI, your institution, or any proctor. Agreeing below only acknowledges the independent simulation conditions described on this page.</li>
+</ol></li>
+</ol></div>
+<p>For concerns about an actual ATI examination or its attestation requirements, consult your instructor or the official testing provider. ATI exam-integrity concerns can be sent to TestSecurity@AscendLearning.com.</p>
+<hr class="att-divider"/>
+<p>Enter your full name to acknowledge, consent to, and accept this attestation, and agree to keep all contents of this assessment confidential.</p>
+<div class="att-lastname"><label for="attName2">Full Name <span>*</span></label><input type="text" id="attName2" placeholder="Full name"/></div>
+<div class="att-agree-strip"><label class="att-agree-label" for="attAgree"><input type="checkbox" id="attAgree"/><span>I Agree</span></label><span class="att-agree-detail">By clicking the I Agree button at the left, I accept all of the above simulation terms and agree to keep all contents of this assessment confidential.</span></div>
+<div class="att-start-area"><p class="att-examlabel">Custom: Nur 131 Fall 2026 Midterm</p><p>Press the Start Test button to begin your test.</p><button type="button" id="attStart" class="att-start-btn">START TEST</button><div id="attError" role="status" class="att-warning"></div></div>
+<div class="att-bottom-notice"><span class="att-symbol">✧</span><div><strong>Full screen mode is available during your simulation testing.</strong><p>Please Note: You can press Escape to exit fullscreen. This is not monitored by a proctor.</p></div></div>
+<div class="att-copyline">NUR 131 independent simulator • Not an official ATI examination</div>
+</div></section>
+
+<div id="calcPanel" class="calc-panel" hidden role="dialog" aria-label="Practice calculator">
+ <div class="calc-head"><strong>Calculator</strong><button type="button" id="calcClose" aria-label="Close calculator">×</button></div>
+ <input id="calcDisplay" readonly aria-label="Calculator display" value="0" />
+ <div class="calc-keys">
+  <button data-calc="C">C</button><button data-calc="⌫">⌫</button><button data-calc="%">%</button><button data-calc="/">÷</button>
+  <button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="*">×</button>
+  <button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="-">−</button>
+  <button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="+">+</button>
+  <button data-calc="0">0</button><button data-calc=".">.</button><button data-calc="±">±</button><button data-calc="=">=</button>
+ </div>
+</div>
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="brand"><span class="brandMark" aria-hidden="true"></span><span>ati</span></div>
+    <div class="quizName">Custom: Nur 131 Fall 2026 Midterm</div>
+  </div>
+  <div class="stripe"></div>
+
+  <section class="exam" id="examView">
+    <div class="status">
+      <div class="qcount" id="qcount" aria-hidden="true"></div>
+      <div class="clockArea">
+        <div class="clockLines">
+          <div>Time Remaining: <strong id="timer">00:15:00</strong></div>
+          <div>Pause Remaining: <strong id="pauseRemaining">00:05:00</strong></div>
+        </div>
+        <button type="button" class="pauseBtn" id="pauseBtn">PAUSE</button><button type="button" id="calcToggle" class="calculatorGlyph" aria-label="Open practice calculator" title="Open calculator"><svg width="23" height="29" viewBox="0 0 23 29" aria-hidden="true"><rect x="2" y="1.5" width="19" height="26" rx="1" fill="#696d70" stroke="#424b50" stroke-width="1"/><rect x="4.8" y="4" width="13.5" height="6.3" fill="#e8efe9"/><g fill="#eeeeeb"><rect x="5" y="12.5" width="3.4" height="3.3"/><rect x="10" y="12.5" width="3.4" height="3.3"/><rect x="15" y="12.5" width="3.4" height="3.3"/><rect x="5" y="17.3" width="3.4" height="3.3"/><rect x="10" y="17.3" width="3.4" height="3.3"/><rect x="15" y="17.3" width="3.4" height="3.3"/><rect x="5" y="22.1" width="3.4" height="3.3"/><rect x="10" y="22.1" width="3.4" height="3.3"/><rect x="15" y="22.1" width="3.4" height="3.3"/></g></svg></button>
+      </div>
+    </div>
+
+    <div class="questionArea" id="questionArea">
+      <div class="stem" id="stem"></div>
+      <div class="progressDots" id="progressDots" aria-label="Exam progress"></div><div class="options" id="options" role="radiogroup" aria-label="Answer choices"></div>
+    </div>
+
+    <div class="navrow">
+      <button type="button" class="navBtn" id="backBtn" style="display:none">BACK</button>
+      <button type="button" class="navBtn" id="continueBtn">CONTINUE</button>
+    </div>
+
+    <div class="footerNote">
+      <span class="tinyMark">✣</span>
+      <span><b>Full screen mode is in effect during your practice testing.</b><br/>Please Note: Exiting fullscreen with the Escape key may interrupt your practice session. This is an independent simulation; no proctor is monitoring or recording your test.</span>
+    </div>
+  </section>
+</div>
+
+
+<section id="endBlankPage" aria-label="Assessment finished" style="display:none;min-height:100vh;background:#fff;border-top:5px solid #bc5c66;font-family:Arial,Helvetica,sans-serif;position:relative">
+ <div style="max-width:930px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:20px 14px 14px;border-bottom:1px solid #ddd;font-size:12px;color:#6e6e6e"><span style="font-size:25px;color:#bba0a2">✣ ati</span><span>Custom: Nur 131 Fall 2026 Midterm</span><span style="margin-left:auto;font-size:10px">× CLOSE</span></div>
+ <div style="height:10px;background:repeating-linear-gradient(120deg,#fff 0 8px,#ddd 8px 9px,#fff 9px 14px)"></div>
+ <div style="width:min(590px,90vw);margin:315px auto 0;border-top:1px solid #ccc;padding:10px 6px;color:#777;font-size:9px;line-height:1.5"><b>Full screen mode is in effect during your practice testing.</b><div>This practice assessment has ended.</div><div style="text-align:center;margin-top:9px">NUR 131 independent study assessment</div></div>
+</section>
+<div id="examCompleteDialog" role="dialog" aria-modal="true" aria-labelledby="completedHeading">
+ <div class="completeBox"><h2 id="completedHeading">Assessment Completed!</h2><p>How would you like to proceed?</p><button type="button" id="finalizeBtn">Finalize and View Results</button></div>
+</div>
+<section id="completedWait" aria-live="polite">
+ <div class="waitBrand">✣ <span style="font-size:12px">NUR 131</span></div><button class="waitClose" type="button" id="waitCloseBtn">× CLOSE</button>
+ <div class="waitCenter"><h2>Congratulations on finishing your test!</h2><div class="bars"><span></span><span></span><span></span><span></span><span></span></div><p>Now take a deep breath, sit back and relax while we calculate your score.</p><div class="waitTile"><span class="waitEmblem">◉</span><span>Please wait...</span></div><button type="button" id="viewPracticeReview">View Results</button></div>
+</section>
+
+<section class="result" id="resultView" aria-live="polite">
+  <div class="resultsPopup" role="dialog" aria-modal="true" aria-labelledby="resultsHeading">
+    <h2 id="resultsHeading">View Results</h2>
+    <div class="score" id="scoreText">Exam complete</div>
+    <p id="scoreMessage">Your assessment has been submitted.</p>
+    <div class="resultActions"><button type="button" class="restartBtn" id="restartBtn">RETAKE QUIZ</button><button type="button" id="closeResultsPopup">CLOSE</button></div>
+  </div>
+  <div class="review" id="review" hidden></div>
+</section>
+
+<div id="fullscreenWarning" class="fullscreenWarning">
+  <div class="box">
+    <h2>Fullscreen exited</h2>
+    <p>For the full exam-style practice view, return to fullscreen.</p>
+    <button id="returnFullscreen" class="startBtn">RETURN TO FULLSCREEN</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const questions = [
+  {
+    "q": "The client has been quiet during the initial interview and looks away while speaking. A nurse is caring for a client who says, 'No one ever listens to me.' Which response is most therapeutic?",
+    "a": [
+      "Why do you think that happens?",
+      "Tell me more about feeling unheard.",
+      "That is not true.",
+      "You should talk louder so people notice."
+    ],
+    "correct": 1,
+    "rationale": "Open-ended exploration encourages the client to describe feelings and supports therapeutic communication."
+  },
+  {
+    "q": "The client is admitted to the mental health unit after making statements about self-harm and appears withdrawn. A nurse is assessing a client with suicidal ideation. Which action is the priority?",
+    "a": [
+      "Ask the client to sign a no-suicide contract",
+      "Place the client on one-to-one observation if indicated by risk",
+      "Encourage the client to journal feelings",
+      "Tell the client to think positively"
+    ],
+    "correct": 1,
+    "rationale": "Immediate safety is the priority when suicide risk is present."
+  },
+  {
+    "q": "The nurse is discussing ways to communicate needs during a stressful family meeting. Which statement by a client indicates effective use of assertive communication?",
+    "a": [
+      "You never listen to me.",
+      "I feel upset when I am interrupted.",
+      "Whatever you want is fine.",
+      "If you do that again, you'll regret it."
+    ],
+    "correct": 1,
+    "rationale": "Assertive communication uses clear I-statements without blaming or threatening."
+  },
+  {
+    "q": "The client is pacing, breathing rapidly, and unable to follow lengthy directions. A client with panic-level anxiety arrives in the emergency department. Which intervention should the nurse implement first?",
+    "a": [
+      "Teach deep breathing exercises in detail",
+      "Stay with the client and speak calmly",
+      "Ask the client to describe childhood stressors",
+      "Encourage group interaction"
+    ],
+    "correct": 1,
+    "rationale": "During panic anxiety, the priority is presence, calm communication, and reducing stimulation."
+  },
+  {
+    "q": "Family members report that the client has been awake most nights and has started several projects. Which finding is expected in a client experiencing a manic episode?",
+    "a": [
+      "Slow speech and low energy",
+      "Pressured speech and decreased need for sleep",
+      "Flat affect and social withdrawal",
+      "Fear of weight gain"
+    ],
+    "correct": 1,
+    "rationale": "Pressured speech and little sleep are classic findings in mania."
+  },
+  {
+    "q": "The client looks toward an empty corner of the room and says that someone is speaking. A nurse is planning care for a client with auditory hallucinations. Which intervention is appropriate?",
+    "a": [
+      "Argue that the voices are not real",
+      "Ask what the voices are saying and assess for command content",
+      "Ignore the client's report to avoid reinforcing it",
+      "Tell the client to stop listening"
+    ],
+    "correct": 1,
+    "rationale": "The nurse should assess the hallucination content, especially whether the voices direct harm."
+  },
+  {
+    "q": "The client has developed strong feelings toward a staff member during treatment. Which client statement best demonstrates transference?",
+    "a": [
+      "You remind me of my mother, and I feel I can trust you.",
+      "I know you are my nurse today.",
+      "I prefer to attend group after lunch.",
+      "I am upset that my medication changed."
+    ],
+    "correct": 0,
+    "rationale": "Transference occurs when feelings toward one person are unconsciously redirected to another."
+  },
+  {
+    "q": "The nurse is meeting the client for the first scheduled interview. A nurse is leading a client through the orientation phase of the nurse-client relationship. Which task is part of this phase?",
+    "a": [
+      "Evaluating goal attainment",
+      "Setting boundaries and expectations",
+      "Processing termination feelings",
+      "Promoting independence at discharge"
+    ],
+    "correct": 1,
+    "rationale": "The orientation phase includes introductions, roles, boundaries, and goal setting."
+  },
+  {
+    "q": "An acutely agitated client is placed in seclusion after less restrictive strategies fail. Which intervention is appropriate for a client placed in seclusion?",
+    "a": [
+      "Document only when the client calms down",
+      "Observe the client according to policy and offer food, fluids, and toileting",
+      "Leave the client alone until the order expires",
+      "Use seclusion as punishment for aggression"
+    ],
+    "correct": 1,
+    "rationale": "Clients in seclusion require monitoring and meeting of basic needs per policy."
+  },
+  {
+    "q": "A caregiver reports that changes to the daily schedule increase the client’s restlessness. A nurse is teaching a family about Alzheimer disease. Which statement should the nurse include?",
+    "a": [
+      "Memory loss improves with rest.",
+      "A structured routine can reduce confusion.",
+      "Confront the client when they misremember facts.",
+      "Complex choices help maintain cognition."
+    ],
+    "correct": 1,
+    "rationale": "Simple routines reduce anxiety and confusion in clients with cognitive impairment."
+  },
+  {
+    "q": "The nurse compares the client’s behavior today with the family’s description of baseline cognition. Which finding is most consistent with delirium rather than dementia?",
+    "a": [
+      "Gradual onset",
+      "Stable level of consciousness",
+      "Acute onset with fluctuating attention",
+      "Long-term memory loss only"
+    ],
+    "correct": 2,
+    "rationale": "Delirium usually develops suddenly and causes fluctuating awareness and attention."
+  },
+  {
+    "q": "The client recently had poor fluid intake and has difficulty keeping food down. A client taking lithium reports vomiting and diarrhea. Which action should the nurse take first?",
+    "a": [
+      "Administer the next dose with food",
+      "Hold the medication and assess for toxicity",
+      "Tell the client this is expected",
+      "Encourage caffeine intake"
+    ],
+    "correct": 1,
+    "rationale": "GI symptoms can signal lithium toxicity and should be assessed promptly."
+  },
+  {
+    "q": "The nurse is reviewing required monitoring before an antipsychotic is administered. Which laboratory test is especially important for a client prescribed clozapine?",
+    "a": [
+      "Platelet count",
+      "Absolute neutrophil count",
+      "Serum amylase",
+      "Troponin"
+    ],
+    "correct": 1,
+    "rationale": "Clozapine can cause agranulocytosis, so ANC monitoring is essential."
+  },
+  {
+    "q": "The client stays in bed, eats little, and reports a loss of interest in favorite activities. A nurse is caring for a client with major depressive disorder. Which behavior is an expected finding?",
+    "a": [
+      "Flight of ideas",
+      "Anhedonia",
+      "Grandiosity",
+      "Compulsive rituals"
+    ],
+    "correct": 1,
+    "rationale": "Anhedonia is a hallmark symptom of depression."
+  },
+  {
+    "q": "Several staff members report inconsistent accounts of what different nurses have promised. Which action is best when a client with borderline personality disorder begins splitting staff members?",
+    "a": [
+      "Assign different rules for each shift",
+      "Maintain consistent limits among staff",
+      "Promise special exceptions",
+      "Avoid addressing the behavior"
+    ],
+    "correct": 1,
+    "rationale": "Consistency among staff helps reduce manipulation and splitting."
+  },
+  {
+    "q": "The client reports spending hours completing repetitive rituals before leaving home. A client says, 'I keep washing my hands because they feel contaminated.' This behavior is best described as which of the following?",
+    "a": [
+      "A delusion",
+      "A compulsion",
+      "A phobia",
+      "A conversion symptom"
+    ],
+    "correct": 1,
+    "rationale": "Compulsions are repetitive behaviors performed to reduce anxiety."
+  },
+  {
+    "q": "The client becomes startled after hearing a loud sound and reports an unwanted trauma memory. Which intervention is appropriate for a client experiencing posttraumatic stress disorder?",
+    "a": [
+      "Force the client to discuss the trauma immediately",
+      "Provide a calm environment and support grounding techniques",
+      "Discourage sleep to reduce nightmares",
+      "Tell the client to ignore flashbacks"
+    ],
+    "correct": 1,
+    "rationale": "Safety, stabilization, and grounding are appropriate supportive interventions."
+  },
+  {
+    "q": "The nurse reviews the admission laboratory results before implementing the care plan. A nurse is admitting a client with anorexia nervosa. Which finding requires the highest priority follow-up?",
+    "a": [
+      "Uses calorie counting apps",
+      "Potassium 2.9 mEq/L",
+      "Expresses fear of weight gain",
+      "Exercises daily"
+    ],
+    "correct": 1,
+    "rationale": "Hypokalemia can cause life-threatening cardiac complications."
+  },
+  {
+    "q": "The client asks about avoiding alcohol-containing products while taking prescribed medication. Which statement by a client prescribed disulfiram indicates understanding of the teaching?",
+    "a": [
+      "I can drink beer if I skip one dose.",
+      "I need to avoid products that contain alcohol.",
+      "This medicine will stop cravings immediately.",
+      "It is safe to drink after taking this medication."
+    ],
+    "correct": 1,
+    "rationale": "Disulfiram reacts with alcohol from beverages and products such as mouthwash."
+  },
+  {
+    "q": "The client has been hospitalized for several hours after abruptly stopping heavy alcohol use. A nurse is caring for a client withdrawing from alcohol. Which finding is most concerning?",
+    "a": [
+      "Mild tremor",
+      "Diaphoresis",
+      "Seizure activity",
+      "Anxiety"
+    ],
+    "correct": 2,
+    "rationale": "Seizures are a severe complication of alcohol withdrawal and require immediate action."
+  },
+  {
+    "q": "The client appears frightened and looks toward a place where no one is standing. Which response is therapeutic when a client says, 'I am hearing voices telling me to hurt myself'?",
+    "a": [
+      "Those voices are not real.",
+      "What are the voices saying to you right now?",
+      "You should not talk about that.",
+      "Try to ignore the voices."
+    ],
+    "correct": 1,
+    "rationale": "The nurse should assess the content and potential danger of the hallucination."
+  },
+  {
+    "q": "The client reports feeling tense on most days and having difficulty controlling worry. A nurse is evaluating a client with generalized anxiety disorder. Which symptom is expected?",
+    "a": [
+      "Persistent excessive worry",
+      "Command hallucinations",
+      "Memory blackouts",
+      "Euphoric mood"
+    ],
+    "correct": 0,
+    "rationale": "Generalized anxiety disorder involves chronic excessive worry."
+  },
+  {
+    "q": "The nurse is providing care during the immediate recovery period following a procedure. Which finding should the nurse expect in a client receiving electroconvulsive therapy?",
+    "a": [
+      "Immediate long-term memory improvement",
+      "Temporary confusion after treatment",
+      "Permanent paralysis",
+      "Increased violent behavior"
+    ],
+    "correct": 1,
+    "rationale": "Short-term confusion is a common temporary effect after ECT."
+  },
+  {
+    "q": "The client and family are overwhelmed after an unexpected loss and request help. A nurse is caring for a client who has just experienced a crisis. Which nursing goal is the priority?",
+    "a": [
+      "Analyze childhood experiences",
+      "Restore baseline functioning and safety",
+      "Develop a five-year life plan",
+      "Promote total independence immediately"
+    ],
+    "correct": 1,
+    "rationale": "Crisis intervention focuses on safety and return to prior functioning."
+  },
+  {
+    "q": "The client asks which foods can cause an adverse medication interaction. Which meal choice is best for a client taking a monoamine oxidase inhibitor?",
+    "a": [
+      "Pepperoni pizza and red wine",
+      "Aged cheddar and salami",
+      "Grilled chicken, rice, and green beans",
+      "Smoked fish and beer"
+    ],
+    "correct": 2,
+    "rationale": "Clients taking MAOIs should avoid tyramine-rich foods such as aged cheese and cured meats."
+  },
+  {
+    "q": "The nurse is documenting thought processes during a mental status examination. A client with schizophrenia exhibits loose associations. Which speech pattern should the nurse expect?",
+    "a": [
+      "Long pauses before responding",
+      "Rapid shifts from one unrelated idea to another",
+      "Repeating the nurse's words exactly",
+      "Speaking only in rhymes"
+    ],
+    "correct": 1,
+    "rationale": "Loose associations involve ideas that shift with weak or absent logical connection."
+  },
+  {
+    "q": "The client is practicing a gradual plan to reduce ritualistic behaviors. A nurse is caring for a client with obsessive-compulsive disorder. Which outcome indicates improvement?",
+    "a": [
+      "The client completely stops all rituals on day one",
+      "The client delays hand washing for 10 minutes",
+      "The client avoids all social contact",
+      "The client denies having anxiety"
+    ],
+    "correct": 1,
+    "rationale": "Improvement is shown by gradually delaying or reducing compulsive behavior."
+  },
+  {
+    "q": "The client reports feeling unwell after stopping opioid use. Which finding is expected in a client experiencing opioid withdrawal?",
+    "a": [
+      "Pinpoint pupils and respiratory depression",
+      "Euphoria and constipation",
+      "Yawning, abdominal cramping, and piloerection",
+      "Severe hypertension with chest pain"
+    ],
+    "correct": 2,
+    "rationale": "Common opioid withdrawal findings include aches, cramping, yawning, and gooseflesh."
+  },
+  {
+    "q": "The nurse is observing the client’s facial expressions and emotional reactions. A nurse is conducting a mental status examination. Which item is part of the assessment of affect?",
+    "a": [
+      "Client's current emotional expression",
+      "Remote memory",
+      "Level of consciousness only",
+      "Numerical reasoning"
+    ],
+    "correct": 0,
+    "rationale": "Affect refers to the outward expression of emotion."
+  },
+  {
+    "q": "The nurse is reviewing laboratory monitoring for a new mood stabilizer. A client diagnosed with bipolar disorder is prescribed valproate. Which laboratory value should the nurse monitor?",
+    "a": [
+      "Serum calcium",
+      "Liver function tests",
+      "Thyroid-stimulating hormone only",
+      "Troponin I"
+    ],
+    "correct": 1,
+    "rationale": "Valproate can affect liver function, so monitoring is indicated."
+  },
+  {
+    "q": "Which statement by a newly licensed nurse indicates understanding of confidentiality? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "I can discuss a client with my friend if I do not mention a name.",
+      "I should share client information only with team members involved in care.",
+      "I can leave printed reports at the nurses' station.",
+      "I may post a de-identified case on social media for education."
+    ],
+    "correct": 1,
+    "rationale": "Confidential information should be shared only with personnel directly involved in care."
+  },
+  {
+    "q": "A client states, 'I know the FBI put a chip in my tooth.' The nurse should document this as which type of symptom?",
+    "a": [
+      "Obsession",
+      "Delusion",
+      "Illusion",
+      "Compulsion"
+    ],
+    "correct": 1,
+    "rationale": "A fixed false belief is a delusion."
+  },
+  {
+    "q": "Which nursing action is appropriate for a client with depression who has limited energy?",
+    "a": [
+      "Schedule demanding tasks late in the evening",
+      "Break activities into small, manageable steps",
+      "Encourage the client to stay in bed to conserve energy",
+      "Use confrontation when the client hesitates"
+    ],
+    "correct": 1,
+    "rationale": "Small, achievable tasks help promote success in clients with low energy."
+  },
+  {
+    "q": "A nurse is caring for a client with social anxiety disorder. Which intervention is best? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Gradually expose the client to feared social situations with support",
+      "Force the client to speak in front of a large group immediately",
+      "Allow complete avoidance of anxiety-provoking situations",
+      "Discourage use of coping skills"
+    ],
+    "correct": 0,
+    "rationale": "Gradual supported exposure is helpful in social anxiety disorder."
+  },
+  {
+    "q": "Which client is at greatest risk for violence?",
+    "a": [
+      "A client with a history of aggression and current command hallucinations",
+      "A client who prefers to read alone",
+      "A client attending group therapy",
+      "A client who requests extra snacks"
+    ],
+    "correct": 0,
+    "rationale": "A history of violence combined with command hallucinations increases risk."
+  },
+  {
+    "q": "A nurse is reviewing a client's admission status. Which statement about voluntary admission is accurate?",
+    "a": [
+      "The client cannot request discharge.",
+      "The client may request discharge according to legal procedure.",
+      "A court order is required for all treatment.",
+      "The client loses the right to informed consent."
+    ],
+    "correct": 1,
+    "rationale": "Voluntary clients generally retain the right to request discharge per policy and law."
+  },
+  {
+    "q": "Which meal should the nurse expect to encourage for a client prescribed methylphenidate? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "A substantial breakfast before the morning dose",
+      "Only caffeinated beverages during the day",
+      "A tyramine-restricted diet",
+      "A clear liquid dinner only"
+    ],
+    "correct": 0,
+    "rationale": "Stimulants can suppress appetite, so encouraging nutrition early in the day is useful."
+  },
+  {
+    "q": "A nurse is planning care for a client who is grieving the loss of a spouse. Which response is most therapeutic?",
+    "a": [
+      "You need to move on now.",
+      "Tell me what you miss most about your spouse.",
+      "At least your spouse lived a long life.",
+      "You should keep busy and not think about it."
+    ],
+    "correct": 1,
+    "rationale": "Inviting the client to share feelings supports healthy grieving."
+  },
+  {
+    "q": "Which finding indicates a negative symptom of schizophrenia?",
+    "a": [
+      "Hallucinations",
+      "Delusions",
+      "Affective flattening",
+      "Suspiciousness"
+    ],
+    "correct": 2,
+    "rationale": "Negative symptoms include affective flattening, avolition, and anhedonia."
+  },
+  {
+    "q": "A nurse is caring for a client receiving benzodiazepines. Which instruction should the nurse include? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Stop the medication abruptly if you feel better.",
+      "Avoid alcohol while taking this medication.",
+      "Double the dose if anxiety returns.",
+      "Drive until you know whether you feel sleepy."
+    ],
+    "correct": 1,
+    "rationale": "Combining benzodiazepines with alcohol can increase CNS depression."
+  },
+  {
+    "q": "Which intervention is appropriate for a client in restraints?",
+    "a": [
+      "Remove restraints only at the end of the shift",
+      "Reassess circulation, nutrition, hydration, and elimination regularly",
+      "Use restraints whenever a client refuses medication",
+      "Skip documentation until after restraints are removed"
+    ],
+    "correct": 1,
+    "rationale": "Clients in restraints require frequent monitoring and documentation."
+  },
+  {
+    "q": "A nurse is assessing a child with attention-deficit/hyperactivity disorder. Which behavior is expected?",
+    "a": [
+      "Persistent inattention and impulsivity",
+      "Auditory hallucinations",
+      "Compulsive hand washing",
+      "Catatonia"
+    ],
+    "correct": 0,
+    "rationale": "ADHD is characterized by inattention, hyperactivity, and impulsivity."
+  },
+  {
+    "q": "Which statement by a client with bulimia nervosa requires follow-up? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "I binge and then make myself vomit.",
+      "Sometimes I feel ashamed after eating.",
+      "I have started walking after dinner.",
+      "My gums bleed when I floss."
+    ],
+    "correct": 0,
+    "rationale": "Bingeing followed by purging is a core feature and requires treatment and monitoring."
+  },
+  {
+    "q": "A client says, 'I do not think life is worth living.' Which question should the nurse ask first?",
+    "a": [
+      "Have you thought about how you would end your life?",
+      "Why are you so negative?",
+      "What TV shows do you watch?",
+      "Do you want visitors today?"
+    ],
+    "correct": 0,
+    "rationale": "When suicide is suspected, directly assess plan and method."
+  },
+  {
+    "q": "Which finding is expected during the working phase of the nurse-client relationship?",
+    "a": [
+      "Identifying roles and responsibilities",
+      "Promoting behavior change and practicing coping skills",
+      "Reviewing termination feelings only",
+      "Discussing the length of future admissions"
+    ],
+    "correct": 1,
+    "rationale": "The working phase centers on implementing the plan and practicing new behaviors."
+  },
+  {
+    "q": "A nurse is caring for a client with dementia who becomes agitated in the evening. Which term describes this pattern? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Transference",
+      "Sundowning",
+      "Anhedonia",
+      "Confabulation"
+    ],
+    "correct": 1,
+    "rationale": "Increased confusion and agitation in the evening is known as sundowning."
+  },
+  {
+    "q": "A nurse is teaching about selective serotonin reuptake inhibitors. Which statement should the nurse include?",
+    "a": [
+      "You may notice improvement in 1 to 3 weeks or longer.",
+      "This medication works fully after one dose.",
+      "Stop taking it if nausea occurs the first day.",
+      "It should always be taken only at bedtime."
+    ],
+    "correct": 0,
+    "rationale": "SSRIs often take several weeks to reach full therapeutic effect."
+  },
+  {
+    "q": "Which nursing response is best for a client demonstrating paranoia?",
+    "a": [
+      "Whisper with staff nearby.",
+      "Use clear, simple, honest communication.",
+      "Touch the client suddenly to reassure them.",
+      "Challenge the belief aggressively."
+    ],
+    "correct": 1,
+    "rationale": "Simple, honest communication reduces misinterpretation and mistrust."
+  },
+  {
+    "q": "A nurse is planning community education about primary prevention in mental health. Which example should the nurse include? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Crisis counseling after a disaster",
+      "Depression screening clinic",
+      "Stress-management classes for adolescents",
+      "Rehabilitation after hospitalization"
+    ],
+    "correct": 2,
+    "rationale": "Primary prevention aims to reduce the incidence of mental disorders before they occur."
+  },
+  {
+    "q": "Which behavior by a client with narcissistic personality disorder should the nurse expect?",
+    "a": [
+      "Grandiose sense of self-importance",
+      "Intense fear of abandonment only",
+      "Repeated fire setting",
+      "Persistent memory loss"
+    ],
+    "correct": 0,
+    "rationale": "Grandiosity is a common trait in narcissistic personality disorder."
+  },
+  {
+    "q": "A nurse is caring for a client who experienced a traumatic event. Which finding may indicate acute stress disorder?",
+    "a": [
+      "Dissociation and intrusive memories within the first month",
+      "Lifelong antisocial behavior",
+      "Euphoric mood",
+      "Weight gain due to overeating"
+    ],
+    "correct": 0,
+    "rationale": "Acute stress disorder occurs shortly after trauma and may include dissociation and intrusive symptoms."
+  },
+  {
+    "q": "Which action supports milieu therapy on an inpatient unit? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Encouraging a structured therapeutic environment",
+      "Allowing clients to set no unit limits",
+      "Keeping clients isolated from staff",
+      "Using silence as punishment"
+    ],
+    "correct": 0,
+    "rationale": "Milieu therapy uses the environment itself as a therapeutic tool."
+  },
+  {
+    "q": "A client taking haloperidol develops neck spasms and upward eye deviation. Which medication should the nurse anticipate administering?",
+    "a": [
+      "Benztropine",
+      "Naloxone",
+      "Disulfiram",
+      "Docusate"
+    ],
+    "correct": 0,
+    "rationale": "These are acute dystonic reactions, commonly treated with benztropine."
+  },
+  {
+    "q": "Which comment by a client indicates the use of projection?",
+    "a": [
+      "My roommate is angry with me, when I am actually the one feeling angry.",
+      "I forgot because I was tired.",
+      "I know this fear is unreasonable.",
+      "I am cleaning because I enjoy it."
+    ],
+    "correct": 0,
+    "rationale": "Projection attributes one's own feelings to another person."
+  },
+  {
+    "q": "A nurse is planning discharge teaching for a client prescribed antipsychotic medication. Which symptom should the client report immediately? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Dry mouth",
+      "Sore throat and fever",
+      "Mild constipation",
+      "Increased appetite"
+    ],
+    "correct": 1,
+    "rationale": "Fever and sore throat can indicate infection or serious adverse effects and require prompt evaluation."
+  },
+  {
+    "q": "A client is admitted after using cocaine. Which finding should the nurse expect?",
+    "a": [
+      "Bradycardia and drowsiness",
+      "Increased energy and euphoria",
+      "Pinpoint pupils",
+      "Hypothermia and slowed speech"
+    ],
+    "correct": 1,
+    "rationale": "Cocaine intoxication can cause euphoria, increased energy, and sympathetic stimulation."
+  },
+  {
+    "q": "A nurse is caring for a client with somatic symptom disorder. Which intervention is appropriate?",
+    "a": [
+      "Tell the client the symptoms are imaginary",
+      "Acknowledge the symptoms and focus on coping strategies",
+      "Increase unnecessary diagnostic testing",
+      "Encourage complete bed rest"
+    ],
+    "correct": 1,
+    "rationale": "The nurse should acknowledge the client's experience while shifting focus toward healthy coping."
+  },
+  {
+    "q": "Which finding is most characteristic of autism spectrum disorder? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Deficits in social communication and restricted behaviors",
+      "Auditory hallucinations",
+      "Fluctuating consciousness",
+      "Grandiose delusions"
+    ],
+    "correct": 0,
+    "rationale": "Autism spectrum disorder commonly involves social communication difficulties and restricted or repetitive behaviors."
+  },
+  {
+    "q": "Which intervention helps reduce escalation in an angry client?",
+    "a": [
+      "Stand close and speak loudly",
+      "Maintain a calm tone and give the client personal space",
+      "Argue the facts immediately",
+      "Threaten consequences first"
+    ],
+    "correct": 1,
+    "rationale": "A calm tone and adequate personal space can reduce escalation."
+  },
+  {
+    "q": "A nurse is teaching a client with insomnia about sleep hygiene. Which statement by the client indicates understanding?",
+    "a": [
+      "I will exercise vigorously right before bed.",
+      "I will keep a regular sleep schedule.",
+      "I will drink caffeine in the evening.",
+      "I will use my phone in bed until I fall asleep."
+    ],
+    "correct": 1,
+    "rationale": "A consistent sleep schedule is a basic sleep hygiene strategy."
+  },
+  {
+    "q": "A nurse is assessing for extrapyramidal symptoms in a client taking antipsychotics. Which finding suggests akathisia? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "Masklike facial expression",
+      "Restlessness and inability to sit still",
+      "Shuffling gait with tremor only",
+      "Tongue protrusion after years of treatment"
+    ],
+    "correct": 1,
+    "rationale": "Akathisia presents as inner restlessness and constant movement."
+  },
+  {
+    "q": "Which outcome best indicates effective group therapy?",
+    "a": [
+      "The group avoids all conflict",
+      "Members provide feedback and support one another",
+      "Only the leader speaks throughout the session",
+      "Attendance is optional and rarely occurs"
+    ],
+    "correct": 1,
+    "rationale": "Therapeutic groups are characterized by support, participation, and constructive feedback."
+  },
+  {
+    "q": "A client prescribed buspirone asks how it differs from benzodiazepines. Which response by the nurse is accurate?",
+    "a": [
+      "Buspirone can cause dependence quickly.",
+      "Buspirone may take several weeks to work and has less risk of sedation.",
+      "Buspirone is used only for psychosis.",
+      "Buspirone should never be taken on a schedule."
+    ],
+    "correct": 1,
+    "rationale": "Buspirone is scheduled regularly, may take time to work, and usually causes less sedation and dependence."
+  },
+  {
+    "q": "Which statement by a parent of a child with oppositional defiant disorder indicates a need for further teaching? The nurse is selecting the most appropriate finding or action based on the client’s current needs.",
+    "a": [
+      "I will use consistent consequences.",
+      "I should reward positive behavior.",
+      "I should give in to tantrums to keep the peace.",
+      "I will keep my expectations clear."
+    ],
+    "correct": 2,
+    "rationale": "Giving in to tantrums reinforces the behavior and is not recommended."
+  },
+  {
+    "q": "A nurse is providing teaching to a client taking donepezil. Which condition is this medication commonly used to treat?",
+    "a": [
+      "Bipolar disorder",
+      "Alzheimer disease",
+      "Schizophrenia",
+      "Panic disorder"
+    ],
+    "correct": 1,
+    "rationale": "Donepezil is commonly used to manage symptoms associated with Alzheimer disease."
+  }
+];
+
+  let index = 0;
+  let answers = Array(questions.length).fill(null);
+  let seconds = 15 * 60;
+  let pauseSeconds = 5 * 60;
+  let paused = false;
+  let done = false;
+  let started = false;
+
+  const startOverlay = document.getElementById('startOverlay');
+  const app = document.getElementById('app');
+  const resultView = document.getElementById('resultView');
+  const qcount = document.getElementById('qcount');
+  const timer = document.getElementById('timer');
+  const pauseRemaining = document.getElementById('pauseRemaining');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const continueBtn = document.getElementById('continueBtn');
+  const backBtn = document.getElementById('backBtn');
+  const questionArea = document.getElementById('questionArea');
+  const stem = document.getElementById('stem');
+  const options = document.getElementById('options');
+  const scoreText = document.getElementById('scoreText');
+  const scoreMessage = document.getElementById('scoreMessage');
+  const review = document.getElementById('review');
+  const restartBtn = document.getElementById('restartBtn');
+  const fullscreenWarning = document.getElementById('fullscreenWarning');
+
+  function format(s){
+    s=Math.max(0,s);
+    const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60;
+    return [h,m,sec].map(n=>String(n).padStart(2,'0')).join(':');
+  }
+
+  function updateClock(){
+    timer.textContent = format(seconds);
+    pauseRemaining.textContent = format(pauseSeconds);
+  }
+
+  function render(){
+    const item = questions[index];
+    qcount.textContent = `Question: ${index+1} of ${questions.length}`;
+    stem.textContent = item.q;
+    const dots = document.getElementById('progressDots');
+    dots.innerHTML = '';
+    for (let d=0; d<65; d++) {
+      const dot = document.createElement('span');
+      dot.className = 'progressDot' + (d < Math.round((index + 1)/questions.length*65) ? ' completed' : '');
+      dots.appendChild(dot);
+    }
+    options.innerHTML = '';
+    item.a.forEach((label,i)=>{
+      const wrap = document.createElement('label');
+      wrap.className = 'option' + (answers[index]===i ? ' selected' : '');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'ati-answer';
+      input.checked = answers[index] === i;
+      const text = document.createElement('span');
+      text.className='optionText';
+      text.textContent=label;
+      input.addEventListener('change',()=>{ answers[index]=i; render(); });
+      wrap.append(input,text);
+      options.appendChild(wrap);
+    });
+    backBtn.disabled = index===0;
+    continueBtn.textContent = 'CONTINUE';
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  function finish(){
+    if(done) return;
+    done = true;
+    app.style.display='none';
+    document.getElementById('endBlankPage').style.display='block';
+    document.getElementById('examCompleteDialog').style.display='flex';
+    const score = answers.reduce((n,a,i)=>n+(a===questions[i].correct?1:0),0);
+    scoreText.textContent = 'Exam complete';
+    scoreMessage.textContent = 'Your assessment has been submitted.';
+    review.innerHTML = '';
+    questions.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='reviewItem';
+      const user = answers[i]===null ? 'No answer' : item.a[answers[i]];
+      div.innerHTML = `<strong>Question ${i+1}:</strong> ${answers[i]===item.correct?'✓ Correct':'✗ Review'}<br><strong>Your answer:</strong> ${escapeHtml(user)}<br><strong>Correct answer:</strong> ${escapeHtml(item.a[item.correct])}<br>${escapeHtml(item.rationale)}`;
+      review.appendChild(div);
+    });
+  }
+
+  let returnDashboardTimeout = null;
+  function returnToOriginalDashboard(){
+    if(returnDashboardTimeout){clearTimeout(returnDashboardTimeout);returnDashboardTimeout=null;}
+    document.getElementById('examCompleteDialog').style.display='none';
+    document.getElementById('endBlankPage').style.display='none';
+    document.getElementById('completedWait').style.display='none';
+    resultView.style.display='none';
+    app.style.display='none';
+    attestationPage.style.display='none';
+    startOverlay.style.display='block';
+    document.body.classList.remove('exam-taking');
+    document.body.style.overflowY='auto';
+    started=false;
+    done=false;
+    paused=false;
+    index=0;
+    answers=Array(questions.length).fill(null);
+    seconds=15*60;
+    pauseSeconds=5*60;
+    pauseBtn.textContent='PAUSE';
+    questionArea.style.visibility='visible';
+    document.getElementById('viewPracticeReview').style.display='none';
+    updateClock();
+    window.scrollTo(0,0);
+  }
+  document.getElementById('finalizeBtn').addEventListener('click', async ()=>{
+    document.getElementById('examCompleteDialog').style.display='none';
+    document.getElementById('endBlankPage').style.display='none';
+    app.style.display='none';
+    document.getElementById('completedWait').style.display='block';
+    if(document.fullscreenElement){try{await document.exitFullscreen();}catch(e){}}
+    // A brief congratulations page, then the same original assessment dashboard.
+    returnDashboardTimeout=setTimeout(returnToOriginalDashboard,5500);
+  });
+  document.getElementById('viewPracticeReview').addEventListener('click',returnToOriginalDashboard);
+  document.getElementById('closeResultsPopup').addEventListener('click',returnToOriginalDashboard);
+  document.getElementById('waitCloseBtn').addEventListener('click',returnToOriginalDashboard);
+
+  async function enterFullscreen(){
+    const el = document.documentElement;
+    if (!document.fullscreenElement && el.requestFullscreen) {
+      try { await el.requestFullscreen(); } catch(e) {}
+    }
+  }
+
+  const attestationPage = document.getElementById('attestationPage');
+  function showAttestation(){
+    startOverlay.style.display='none';
+    app.style.display='none';
+    attestationPage.style.display='block';
+    document.body.style.overflowY='auto';
+    window.scrollTo(0,0);
+  }
+  document.getElementById('startBtn').addEventListener('click', showAttestation);
+  document.getElementById('midtermBegin').addEventListener('click', showAttestation);
+  document.getElementById('attExit').addEventListener('click', ()=>{
+    attestationPage.style.display='none';
+    startOverlay.style.display='block';
+    window.scrollTo(0,0);
+  });
+  document.getElementById('attStart').addEventListener('click', async ()=>{
+    const name=document.getElementById('attName').value.trim();
+    const confirm=document.getElementById('attName2').value.trim();
+    const initials=['attInitial1','attInitial2','attInitial3'].every(id=>document.getElementById(id).value.trim());
+    if(!name || !confirm || name.toLowerCase()!==confirm.toLowerCase() || !initials || !document.getElementById('attAgree').checked){
+      document.getElementById('attError').textContent='Complete your name, initials, and agreement before continuing.';
+      return;
+    }
+    document.getElementById('attError').textContent='';
+    await enterFullscreen();
+    document.body.classList.add("exam-taking");
+    started=true;
+    attestationPage.style.display='none';
+    app.style.display='flex';
+    render();updateClock();
+  });
+
+  document.getElementById('returnFullscreen').addEventListener('click', async ()=>{
+    await enterFullscreen();
+    fullscreenWarning.style.display='none';
+  });
+
+  document.addEventListener('fullscreenchange', ()=>{
+    if(started && !done && !document.fullscreenElement){
+      fullscreenWarning.style.display='flex';
+    } else {
+      fullscreenWarning.style.display='none';
+    }
+  });
+
+  pauseBtn.addEventListener('click',()=>{
+    if(done) return;
+    if(paused){
+      paused=false;
+      pauseBtn.textContent='PAUSE';
+      questionArea.style.visibility='visible';
+      continueBtn.disabled=false;
+      backBtn.disabled=index===0;
+    } else if(pauseSeconds>0){
+      paused=true;
+      pauseBtn.textContent='RESUME';
+      questionArea.style.visibility='hidden';
+      continueBtn.disabled=true;
+      backBtn.disabled=true;
+    }
+  });
+
+  continueBtn.addEventListener('click',()=>{
+    if(index<questions.length-1){
+      index++;
+      render();
+    } else {
+      finish();
+    }
+  });
+
+  backBtn.addEventListener('click',()=>{
+    if(index>0){
+      index--;
+      render();
+    }
+  });
+
+  restartBtn.addEventListener('click', async ()=>{
+    index=0;
+    answers=Array(questions.length).fill(null);
+    seconds=900;
+    pauseSeconds=300;
+    paused=false;
+    done=false;
+    resultView.style.display='none';
+    document.getElementById('completedWait').style.display='none';
+    document.getElementById('endBlankPage').style.display='none';
+    document.getElementById('examCompleteDialog').style.display='none';
+    document.getElementById('viewPracticeReview').style.display='none';
+    app.style.display='flex';
+    pauseBtn.textContent='PAUSE';
+    questionArea.style.visibility='visible';
+    await enterFullscreen();
+    updateClock();
+    render();
+  });
+
+  setInterval(()=>{
+    if(!started || done) return;
+    if(paused){
+      if(pauseSeconds>0) pauseSeconds--;
+      if(pauseSeconds<=0){
+        paused=false;
+        pauseBtn.textContent='PAUSE';
+        questionArea.style.visibility='visible';
+        continueBtn.disabled=false;
+        render();
+      }
+    } else {
+      if(seconds>0) seconds--;
+      if(seconds<=0) finish();
+    }
+    updateClock();
+  },1000);
+})();
+</script>
+
+<script>
+(function(){
+ const panel=document.getElementById('calcPanel'), toggle=document.getElementById('calcToggle'), close=document.getElementById('calcClose'), display=document.getElementById('calcDisplay');
+ let expr='',lastWasResult=false;
+ toggle.addEventListener('click',()=>{ panel.hidden=!panel.hidden;});
+ close.addEventListener('click',()=>{panel.hidden=true;});
+ document.querySelectorAll('[data-calc]').forEach(btn=>btn.addEventListener('click',()=>{
+  const v=btn.dataset.calc;
+  if(v==='C'){expr='';display.value='0';lastWasResult=false;return;}
+  if(v==='⌫'){expr=expr.slice(0,-1);display.value=expr||'0';return;}
+  if(v==='±'){if(expr.startsWith('-'))expr=expr.slice(1);else expr='-'+expr;display.value=expr||'0';return;}
+  if(v==='='){
+    if(!/^[0-9.()+*/%\- ]+$/.test(expr))return;
+    try{const result=Function('return ('+expr+')')();if(Number.isFinite(result)){expr=String(Math.round(result*100000000)/100000000);display.value=expr;lastWasResult=true;}}catch(e){display.value='Error';expr='';}return;
+  }
+  if(lastWasResult && /[0-9.]/.test(v)){expr='';lastWasResult=false;}
+  expr+=v;display.value=expr;
+ }));
+})();
+</script></body>
+</html>

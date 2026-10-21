@@ -150,7 +150,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 <form id="attestationForm">
 <h2>Carefully read the following terms and conditions of this attestation (the “Attestation”).</h2>
 <p>This attestation sets out the expectations for completing <strong>NUR 131 exam 2</strong>. Read the entire page and complete the name, initials, and agreement fields before starting.</p>
-<p>This is an independent practice exam with 65 questions. It is intended for personal study and does not issue an official course grade, certification, or ATI result.</p>
+<p>This is an independent practice exam. It is intended for personal study and does not issue an official course grade, certification, or ATI result.</p>
 <p>The exam questions and any information about your attempt should be used responsibly. Do not present this practice exam as an official assessment or submit its results as proof of completing an institutional examination.</p>
 <p>Indicate your understanding, acknowledgment, and agreement where requested below.</p>
 <section class="attest-section">
@@ -168,7 +168,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 <section class="attest-section">
 <p>Use a suitable study environment. Prepare your device, make sure you can read the questions comfortably, and close distractions before beginning. Any materials you plan to use should be consistent with your chosen study conditions.</p>
 <p>If this practice attempt is being used alongside an instructor's assignment, follow the instructor's instructions about notes, textbooks, calculators, collaboration, and timing. This page does not replace those instructions.</p>
-<ul><li>Read each question and all response options carefully.</li><li>Select the single best answer for each question.</li><li>Use the Continue button to move forward; there is no Back button.</li><li>Complete all 65 questions before submitting whenever time permits.</li></ul>
+<ul><li>Read each question and all response options carefully.</li><li>Select the single best answer for each question.</li><li>Use the Continue button to move forward; there is no Back button.</li><li>Complete the questions before submitting whenever time permits.</li></ul>
 <p>Enter your initials to acknowledge these exam procedures.</p>
 <label class="field initial-field"><span>Initials *</span><input name="initials2" type="text" maxlength="6" autocomplete="off" required aria-label="Initials for exam procedures"></label>
 </section>
@@ -195,7 +195,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 <ol>
 <li><strong>Personal items:</strong> Set aside phones, notes, and other distractions if you want to practice under exam-like conditions.</li>
 <li><strong>Independent work:</strong> Complete the attempt yourself. Do not ask someone else to take the exam on your behalf.</li>
-<li><strong>Question count:</strong> This exam contains 65 multiple-choice practice questions, with one best answer per question.</li>
+<li><strong>Question format:</strong> Select the one best answer for each multiple-choice question.</li>
 <li><strong>Assessment results:</strong> After you finalize the attempt, a completion message appears. No score is displayed. This is not an official ATI or college report.</li>
 <li><strong>Timing:</strong> The timer starts when you select Start Test, not while you read this page. The current time limit is 12 minutes and 28 seconds. When time expires, the attempt ends and you can view your result.</li>
 <li><strong>Pause:</strong> Use Pause to stop the timer and hide the question while taking a break. Select Resume to continue. The listed pause allowance is five minutes for the entire attempt.</li>
@@ -210,7 +210,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 <p>Enter your full name to acknowledge, consent to, and accept this practice Attestation, and agree to complete this assessment honestly.</p>
 <label class="field"><span>Full Name *</span><input id="confirmName" name="confirmName" type="text" autocomplete="name" maxlength="100" required></label>
 <div class="agreement"><label class="agree-check"><input id="agree" name="agree" type="checkbox" required><span>I Agree</span></label><label class="agree-description" for="agree">By checking the I Agree button, I accept the terms above and agree to complete this practice assessment independently and responsibly.</label></div>
-<div class="attest-start"><p><strong>NUR 131 exam 2</strong> · 65 questions</p><p>When you are ready, select Start Test to begin your exam.</p><p id="formError" class="form-error" role="alert" aria-live="polite"></p><button class="start-test" id="startBtn" type="submit">START TEST</button></div>
+<div class="attest-start"><p><strong>NUR 131 exam 2</strong></p><p>When you are ready, select Start Test to begin your exam.</p><p id="formError" class="form-error" role="alert" aria-live="polite"></p><button class="start-test" id="startBtn" type="submit">START TEST</button></div>
 </div>
 </form>
 <footer class="attest-footer"><p><strong>Full screen mode is in effect during the exam where supported.</strong></p><p>Use the browser's fullscreen controls to exit fullscreen if needed.</p></footer>
@@ -225,7 +225,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #49849c;outline-offset:3p
 
   <main class="main">
     <div class="status">
-      <div class="question-label" id="questionLabel">Question 1 of 65</div>
+      <div class="question-label" id="questionLabel">Question 1</div>
       <div class="clock-wrap">
         <div class="clock">
           <div>Time Remaining: <strong id="time">00:12:28</strong></div>
@@ -320,7 +320,7 @@ pausedMessage.id='pausedMessage';pausedMessage.textContent='Assessment paused';p
 questionBox.after(pausedMessage);
 function updateClock(){time.textContent=timeText(remaining);pauseTime.textContent=timeText(pauseRemaining);}
 function renderQuestion(){
-  questionLabel.textContent=`Question ${current+1} of ${questions.length}`;
+  questionLabel.textContent=`Question ${current+1}`;
   stem.textContent=questions[current].q;choices.innerHTML='';
   questions[current].a.forEach((text,i)=>{
     const label=document.createElement('label');label.className='choice';
